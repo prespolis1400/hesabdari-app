@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" data-theme="default">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="حسابدار شخصی">
+    <meta name="theme-color" content="#EFF3F6">
+    <title>اپلیکیشن مالی هوشمند</title>
+    
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEyOCIgZmlsbD0iIzAwNkM1MSIvPjxwYXRoIGQ9Ik0xNTYgMTU2aDIwMHYyMDBHMTU2eiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik0zNTYgMTU2djIwMEgxNTZWMTU2aDIwMHptNDAgNDBIMTE2djEyMGgyODBWMTk2em0wIDE2MEgxMTZ2NDBoMjgwdi00MHoiIGZpbGw9IiM4REY4Q0QiIG9wYWNpdHk9Ii4yIi8+PHBhdGggZD0iTTIyNiAyMDZoNjB2NjBoLTYwem0tNDAgMGgtNDB2NjBoNDB6bTQwIDgwSDE4NnY0MGg0MHptODAtODBIMjY2djYwaDQwem0wIDgwSDI2NnY0MGg0MHptODAtODBIMzQ2djYwaDQwem0wIDgwSDM0NnY0MGg0MHoiIGZpbGw9IiMwMDJCMjAiLz48L3N2Zz4=">
+    <link rel="icon" type="image/png" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEyOCIgZmlsbD0iIzAwNkM1MSIvPjxwYXRoIGQ9Ik0xNTYgMTU2aDIwMHYyMDBHMTU2eiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik0zNTYgMTU2djIwMEgxNTZWMTU2aDIwMHptNDAgNDBIMTE2djEyMGgyODBWMTk2em0wIDE2MEgxMTZ2NDBoMjgwdi00MHoiIGZpbGw9IiM4REY4Q0QiIG9wYWNpdHk9Ii4yIi8+PHBhdGggZD0iTTIyNiAyMDZoNjB2NjBoLTYwem0tNDAgMGgtNDB2NjBoNDB6bTQwIDgwSDE4NnY0MGg0MHptODAtODBIMjY2djYwaDQwem0wIDgwSDI2NnY0MGg0MHptODAtODBIMzQ2djYwaDQwem0wIDgwSDM0NnY0MGg0MHoiIGZpbGw9IiMwMDJCMjAiLz48L3N2Zz4=">
+
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    
+    <style>
+        /* --- متغیرهای متریال دیزاین --- */
+        :root {
+            --md-sys-color-primary: #006C51;
+            --md-sys-color-on-primary: #FFFFFF;
+            --md-sys-color-primary-container: #8DF8CD;
+            --md-sys-color-on-primary-container: #002116;
+            --md-sys-color-secondary: #4C6359;
+            --md-sys-color-surface: #FBFDFA;
+            --md-sys-color-surface-variant: #DBE5DE;
+            --md-sys-color-on-surface: #191C1B;
+            --md-sys-color-outline: #707974;
+            --md-sys-color-error: #BA1A1A;
+            --md-sys-color-background: #EFF3F6;
+            --radius-L: 20px; --radius-M: 10px;
+        }
+
+        [data-theme="dark"] {
+            --md-sys-color-primary: #70DBB3;
+            --md-sys-color-on-primary: #003828;
+            --md-sys-color-primary-container: #00513C;
+            --md-sys-color-on-primary-container: #8DF8CD;
+            --md-sys-color-surface: #191C1B;
+            --md-sys-color-surface-variant: #404944;
+            --md-sys-color-on-surface: #E1E3E0;
+            --md-sys-color-outline: #89938D;
+            --md-sys-color-background: #101412;
+        }
+
+        [data-theme="red"] {
+            --md-sys-color-primary: #B3261E;
+            --md-sys-color-on-primary: #FFFFFF;
+            --md-sys-color-primary-container: #F9DEDC;
+            --md-sys-color-on-primary-container: #410E0B;
+            --md-sys-color-background: #FFF8F7;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Vazirmatn', sans-serif; background-color: var(--md-sys-color-background); color: var(--md-sys-color-on-surface); margin: 0; padding: 0; display: flex; justify-content: center; height: 100dvh; overflow: hidden; }
+        
+        .app-frame { width: 100%; background-color: var(--md-sys-color-surface); height: 100%; position: relative; display: none; /* مخفی تا زمان لاگین */ flex-direction: column; overflow: hidden; }
+        @media (min-width: 600px) { body { align-items: center; padding: 40px 0; background-color: #ddd; } .app-frame { max-width: 400px; height: 85vh; border-radius: 32px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); border: 8px solid var(--md-sys-color-surface-variant); } }
+
+        /* --- استایل‌های لاگین --- */
+        #loginScreen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--md-sys-color-primary);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 9999;
+        }
+        .login-card {
+            background: rgba(255,255,255,0.95); padding: 30px; border-radius: 24px;
+            width: 80%; max-width: 320px; text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .login-icon { font-size: 50px; margin-bottom: 20px; }
+        .login-input {
+            width: 100%; padding: 12px; margin-bottom: 15px;
+            border: 1px solid #ccc; border-radius: 12px; font-family: 'Vazirmatn';
+            font-size: 16px; text-align: center;
+        }
+        .login-btn {
+            width: 100%; padding: 12px; border-radius: 12px;
+            background: var(--md-sys-color-primary); color: white;
+            border: none; font-size: 16px; font-weight: bold; cursor: pointer;
+        }
+
+        /* --- هدر --- */
+        .app-header { padding: 10px 15px 5px 15px; background: var(--md-sys-color-surface); flex-shrink: 0; z-index: 10; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .tab-group { display: flex; background-color: var(--md-sys-color-surface-variant); border-radius: 50px; position: relative; height: 40px; overflow: hidden; }
+        .tab-item { flex: 1; text-align: center; line-height: 40px; font-size: 13px; font-weight: bold; color: var(--md-sys-color-on-surface); cursor: pointer; z-index: 2; opacity: 0.7; }
+        .tab-item.active { color: var(--md-sys-color-on-primary-container); opacity: 1; }
+        .tab-indicator { position: absolute; top: 3px; bottom: 3px; width: calc(50% - 3px); background-color: var(--md-sys-color-surface); border-radius: 40px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); z-index: 1; right: 3px; left: auto; }
+        .tab-group.pos-right .tab-indicator { transform: translateX(0); }
+        .tab-group.pos-left .tab-indicator { transform: translateX(calc(-100% - 6px)); }
+
+        /* --- محتوا --- */
+        .content-scrollable { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 120px; -webkit-overflow-scrolling: touch; }
+        .content-scrollable::-webkit-scrollbar { width: 0px; background: transparent; }
+        .page-section { display: none; }
+        .page-section.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .md-card { background-color: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-surface-variant); border-radius: var(--radius-L); padding: 15px; margin-bottom: 12px; }
+        
+        /* --- اینپوت‌ها --- */
+        .compact-row { display: flex; gap: 8px; margin-bottom: 10px; }
+        .input-box { flex: 1; position: relative; }
+        .input-box label { font-size: 11px; color: var(--md-sys-color-primary); margin-bottom: 4px; display: block; font-weight: bold; }
+        input, select { width: 100%; padding: 0 10px; font-family: 'Vazirmatn'; font-size: 14px; background-color: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline); border-radius: var(--radius-M); color: var(--md-sys-color-on-surface); outline: none; text-align: center; height: 42px; }
+        input:focus, select:focus { border-color: var(--md-sys-color-primary); box-shadow: 0 0 0 1px var(--md-sys-color-primary); }
+        .btn-primary { width: 100%; padding: 12px; border-radius: 100px; border: none; background-color: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); font-family: 'Vazirmatn'; font-size: 14px; font-weight: bold; cursor: pointer; margin-top: 5px; }
+        .btn-outline { background: transparent; border: 1px solid var(--md-sys-color-outline); color: var(--md-sys-color-outline); }
+
+        /* --- تاریخ و لیست --- */
+        .base-date-container { display: flex; align-items: center; justify-content: center; gap: 2px; }
+        .base-date-select { padding: 0 2px; height: 30px; font-size: 12px; background: transparent; border: 1px solid var(--md-sys-color-surface-variant); border-radius: 6px; color: var(--md-sys-color-primary); font-weight: bold; width: auto; min-width: 40px; }
+        .date-row { display: flex; gap: 5px; align-items: center; }
+        .date-select { padding: 0 2px; font-size: 12px; }
+        .cheque-list-container { border-top: 1px solid var(--md-sys-color-surface-variant); margin-top: 10px; }
+        .cheque-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--md-sys-color-surface-variant); font-size: 13px; }
+        .ch-info { flex: 1; }
+        .ch-top { display: flex; justify-content: space-between; margin-bottom: 4px; font-weight: bold; }
+        .ch-btm { display: flex; justify-content: space-between; color: var(--md-sys-color-outline); font-size: 11px; }
+        .btn-del { color: var(--md-sys-color-error); padding: 5px 10px; cursor: pointer; font-size: 18px; }
+
+        /* --- فوتر --- */
+        .sticky-footer { position: absolute; bottom: 0; left: 0; right: 0; background: var(--md-sys-color-on-surface); color: var(--md-sys-color-surface); padding: 10px 15px 15px 15px; border-radius: 20px 20px 0 0; box-shadow: 0 -4px 15px rgba(0,0,0,0.15); z-index: 100; display: none; max-height: 35vh; overflow-y: auto; }
+        .footer-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; text-align: center; }
+        .f-item { display: flex; flex-direction: column; justify-content: center; }
+        .f-item span:first-child { font-size: 14px; font-weight: bold; display: block; line-height: 1.2; }
+        .f-item span:last-child { font-size: 10px; opacity: 0.7; margin-top: 2px; }
+        .f-total-row { grid-column: span 4; border-top: 1px solid rgba(255,255,255,0.15); margin-top: 8px; padding-top: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .f-ras-date { grid-column: span 4; font-size: 11px; text-align: center; margin-top: 4px; opacity: 0.6; }
+
+        .fab { position: absolute; bottom: 30px; left: 20px; width: 48px; height: 48px; border-radius: 14px; background-color: var(--md-sys-color-secondary); color: white; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); cursor: pointer; z-index: 200; transition: bottom 0.3s ease; }
+        
+        .chip-group { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; }
+        .chip-label { padding: 8px 0; border-radius: 10px; font-size: 12px; text-align: center; background-color: var(--md-sys-color-surface-variant); border: 1px solid transparent; }
+        .chip-radio:checked + .chip-label { background-color: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); border-color: var(--md-sys-color-primary); font-weight: bold; }
+        .chip-radio { display: none; }
+        .switch-box { display: flex; align-items: center; background: var(--md-sys-color-primary-container); padding: 4px 10px; border-radius: 8px; color: var(--md-sys-color-on-primary-container); font-size: 11px; font-weight: bold; }
+        .toggle-switch { position: relative; width: 34px; height: 20px; margin-right: 5px; }
+        .toggle-switch input { opacity: 0; }
+        .slider { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.2); border-radius: 20px; transition: .4s; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background: white; border-radius: 50%; transition: .4s; }
+        input:checked + .slider { background: var(--md-sys-color-primary); }
+        html[dir="rtl"] input:checked + .slider:before { transform: translateX(14px); }
+        
+        .result-box { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); text-align: center; padding: 15px; border-radius: 16px; margin-top: 10px; display: none; }
+        .res-big { font-size: 20px; font-weight: 900; margin: 5px 0; }
+        .res-small { font-size: 12px; opacity: 0.8; }
+        .signature { text-align: center; font-size: 10px; opacity: 0.4; margin-top: 20px; margin-bottom: 10px; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+        .modal-card { background: var(--md-sys-color-surface); padding: 20px; border-radius: 20px; width: 70%; max-width: 250px; text-align: center; }
+        .modal-btn { width: 100%; padding: 10px; margin-bottom: 5px; border-radius: 10px; border:none; color:white; font-size: 13px; }
+    </style>
+</head>
+<body>
+
+    <div id="loginScreen">
+        <div class="login-card">
+            <div class="login-icon">🔒</div>
+            <h3 style="margin-top:0; color:#333;">ورود امن</h3>
+            <input type="text" id="username" class="login-input" placeholder="نام کاربری">
+            <input type="password" id="password" class="login-input" placeholder="رمز عبور">
+            <button class="login-btn" onclick="checkLogin()">ورود</button>
+            <div id="loginError" style="color:red; font-size:12px; margin-top:10px; display:none;">اطلاعات اشتباه است!</div>
+        </div>
+    </div>
+
+    <div class="app-frame" id="appFrame">
+        <div class="app-header">
+            <h2 style="margin:0 0 10px 0; text-align:center; font-size:16px; color:var(--md-sys-color-primary);">جعبه ابزار مالی</h2>
+            <div class="tab-group pos-right" id="mainTabGroup">
+                <div class="tab-item active" onclick="switchTab('loan')">اقساط وام</div>
+                <div class="tab-item" onclick="switchTab('cheque')">رأس‌گیری چک</div>
+                <div class="tab-indicator"></div>
+            </div>
+        </div>
+
+        <div class="content-scrollable">
+            <div id="tab-loan" class="page-section active">
+                <div class="md-card">
+                    <div class="compact-row">
+                        <div class="input-box" style="flex:2;">
+                            <label>مبلغ مانده (تومان)</label>
+                            <input type="tel" id="loanAmount" placeholder="مثلاً ۵۰,۰۰۰,۰۰۰" oninput="formatLoanInput(this)">
+                        </div>
+                        <div class="input-box">
+                            <label>سود %</label>
+                            <input type="tel" id="loanRate" value="۳.۹" oninput="forcePersianInput(this); autoCalcLoan();">
+                        </div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <label style="margin:0; font-size:12px; font-weight:bold; color:var(--md-sys-color-outline);">مدت بازپرداخت</label>
+                        <div class="switch-box">
+                            <span style="margin-left:5px;">سود +۱</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="loanExtraMonth" onchange="autoCalcLoan()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="chip-group">
+                        <input type="radio" name="lMonths" id="lm4" value="4" class="chip-radio" onchange="autoCalcLoan()" checked><label class="chip-label" for="lm4">۴ ماه</label>
+                        <input type="radio" name="lMonths" id="lm8" value="8" class="chip-radio" onchange="autoCalcLoan()"><label class="chip-label" for="lm8">۸ ماه</label>
+                        <input type="radio" name="lMonths" id="lm12" value="12" class="chip-radio" onchange="autoCalcLoan()"><label class="chip-label" for="lm12">۱۲ ماه</label>
+                        <input type="radio" name="lMonths" id="lm16" value="16" class="chip-radio" onchange="autoCalcLoan()"><label class="chip-label" for="lm16">۱۶ ماه</label>
+                    </div>
+                    <div style="display:flex; gap:10px; margin-top:15px;">
+                        <button class="btn-primary btn-outline" style="flex:1;" onclick="resetLoanApp()">ریست</button>
+                        <button class="btn-primary" style="flex:2;" onclick="calculateLoan(true)">محاسبه</button>
+                    </div>
+                </div>
+                <div id="loanResultArea" class="result-box">
+                    <div class="res-small" id="loanTotalDetail"></div>
+                    <div class="res-big" id="monthlyInstallment"></div>
+                    <div class="res-small" style="border-top:1px dashed rgba(0,0,0,0.2); padding-top:5px; margin-top:5px;" id="loanInterestDetail"></div>
+                </div>
+                <div class="signature">برنامه نویس: حیدر حیدری</div>
+            </div>
+
+            <div id="tab-cheque" class="page-section">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; padding:0 5px;">
+                    <div style="display:flex; align-items:center; gap:5px; background:var(--md-sys-color-surface); padding:5px; border-radius:8px; border:1px solid var(--md-sys-color-outline);">
+                        <span style="font-size:11px;">درصد:</span>
+                        <input type="tel" id="chequeRate" value="۵" oninput="forcePersianInput(this); calcChequeStats()" style="width:40px; height:25px; padding:0; border:none; background:transparent;">
+                    </div>
+                    <div style="display:flex; flex-direction:column; align-items:center;">
+                        <span style="font-size:10px; color:var(--md-sys-color-outline); margin-bottom:2px;">تاریخ مبنا (امروز)</span>
+                        <div class="base-date-container">
+                            <select id="baseD" class="base-date-select" onchange="updateBaseDate()"></select>
+                            <span style="font-size:12px;">/</span>
+                            <select id="baseM" class="base-date-select" onchange="updateBaseDate()">
+                                <option value="1">۰۱</option><option value="2">۰۲</option><option value="3">۰۳</option>
+                                <option value="4">۰۴</option><option value="5">۰۵</option><option value="6">۰۶</option>
+                                <option value="7">۰۷</option><option value="8">۰۸</option><option value="9">۰۹</option>
+                                <option value="10">۱۰</option><option value="11">۱۱</option><option value="12">۱۲</option>
+                            </select>
+                            <span style="font-size:12px;">/</span>
+                            <select id="baseY" class="base-date-select" onchange="updateBaseDate()"></select>
+                        </div>
+                    </div>
+                    <div onclick="resetChequeApp()" style="color:var(--md-sys-color-error); font-size:12px; cursor:pointer;">پاکسازی</div>
+                </div>
+                <div class="md-card" style="padding:12px;">
+                    <div class="compact-row">
+                        <div class="input-box" style="flex:2;">
+                            <label>مبلغ چک</label>
+                            <input type="tel" id="chAmount" placeholder="تومان" onkeyup="formatCurrency(this)">
+                        </div>
+                        <div class="input-box" style="flex:1;">
+                            <label>تعداد</label>
+                            <input type="tel" id="chCount" placeholder="عدد" oninput="forcePersianInput(this)">
+                        </div>
+                    </div>
+                    <div class="compact-row">
+                        <div class="input-box" style="flex:1;">
+                            <label>فاصله</label>
+                            <select id="chStep" onchange="updateDefaultDate()" style="padding:0 5px;">
+                                <option value="1">۱ ماهه</option>
+                                <option value="2">۲ ماهه</option>
+                                <option value="3">۳ ماهه</option>
+                                <option value="4">۴ ماهه</option>
+                            </select>
+                        </div>
+                        <div class="input-box" style="flex:2;">
+                            <label>تاریخ شروع</label>
+                            <div class="date-row">
+                                <select id="chD" class="date-select" style="flex:1;"></select>
+                                <select id="chM" class="date-select" style="flex:1.5;">
+                                    <option value="1">فروردین</option><option value="2">اردیبهشت</option><option value="3">خرداد</option>
+                                    <option value="4">تیر</option><option value="5">مرداد</option><option value="6">شهریور</option>
+                                    <option value="7">مهر</option><option value="8">آبان</option><option value="9">آذر</option>
+                                    <option value="10">دی</option><option value="11">بهمن</option><option value="12">اسفند</option>
+                                </select>
+                                <select id="chY" class="date-select" style="flex:1.2;"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-primary" onclick="generateCheques()">افزودن به لیست</button>
+                </div>
+                <div class="md-card" style="padding: 10px 15px;">
+                    <div style="font-size:12px; font-weight:bold; color:var(--md-sys-color-primary); margin-bottom:5px;">لیست چک‌ها</div>
+                    <div id="chequeListEl"></div>
+                </div>
+                <div style="height: 100px;"></div>
+                <div class="signature">برنامه نویس: حیدر حیدری</div>
+            </div>
+        </div>
+
+        <div class="sticky-footer" id="chequeFooter">
+            <div class="footer-grid">
+                <div class="f-item"><span id="fCount">۰</span><span>تعداد</span></div>
+                <div class="f-item"><span id="fRasDays">۰</span><span>روز رأس</span></div>
+                <div class="f-item"><span id="fTotal">۰</span><span>جمع کل</span></div>
+                <div class="f-item"><span id="fInterest">۰</span><span>کارمزد</span></div>
+                <div class="f-total-row">
+                    <span style="font-size:13px;">خالص دریافتی:</span>
+                    <span style="color: #FFD54F; font-weight:900; font-size:16px;" id="fBalance">۰</span>
+                </div>
+                <div class="f-ras-date">تاریخ رأس: <span id="fRasDate" style="color:#fff; font-weight:bold;">---</span></div>
+            </div>
+        </div>
+        <div class="fab" onclick="toggleThemeModal()">🎨</div>
+    </div>
+
+    <div id="themeModal" class="modal-overlay" onclick="closeThemeModal(event)">
+        <div class="modal-card">
+            <h3 style="margin-top:0; font-size:16px;">تم رنگی</h3>
+            <button class="modal-btn" style="background:#006C51;" onclick="setTheme('default')">سبز کلاسیک</button>
+            <button class="modal-btn" style="background:#101412; border:1px solid #333;" onclick="setTheme('dark')">تاریک (Dark)</button>
+            <button class="modal-btn" style="background:#B3261E;" onclick="setTheme('red')">قرمز</button>
+            <button onclick="document.getElementById('themeModal').style.display='none'" style="background:transparent; border:none; color:var(--md-sys-color-primary); margin-top:5px; font-weight:bold; font-size:12px;">بستن</button>
+        </div>
+    </div>
+
+<script>
+    // ==================== سیستم لاگین (ساده) ====================
+    function checkLogin() {
+        const u = document.getElementById('username').value;
+        const p = document.getElementById('password').value;
+        // نام کاربری و رمز عبور را اینجا تنظیم کنید
+        if(u === "admin" && p === "1234") {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('appFrame').style.display = 'flex';
+        } else {
+            document.getElementById('loginError').style.display = 'block';
+        }
+    }
+
+    // ==================== ابزارهای تبدیل اعداد ====================
+    function toPersianNum(num) {
+        if(num === null || num === undefined) return '';
+        return num.toString().replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]);
+    }
+    function toEnglishNum(str) {
+        if(!str) return '';
+        return str.toString().replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d)).replace(/,/g, '');
+    }
+    function forcePersianInput(input) {
+        let val = toEnglishNum(input.value);
+        if(!val) { input.value = ''; return; }
+        input.value = toPersianNum(val);
+    }
+    function formatNumber(num) { return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+
+    // ==================== UI ====================
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-item').forEach(el => el.classList.remove('active'));
+        const tabGroup = document.getElementById('mainTabGroup');
+        tabGroup.classList.remove('pos-right', 'pos-left');
+        if(tabName === 'loan') { document.querySelectorAll('.tab-item')[0].classList.add('active'); tabGroup.classList.add('pos-right'); }
+        if(tabName === 'cheque') { document.querySelectorAll('.tab-item')[1].classList.add('active'); tabGroup.classList.add('pos-left'); }
+        document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+        document.getElementById('tab-' + tabName).classList.add('active');
+        const footer = document.getElementById('chequeFooter');
+        const fab = document.querySelector('.fab');
+        if(tabName === 'cheque') { footer.style.display = 'block'; fab.style.bottom = '185px'; }
+        else { footer.style.display = 'none'; fab.style.bottom = '40px'; }
+    }
+    function toggleThemeModal() { document.getElementById('themeModal').style.display = 'flex'; }
+    function closeThemeModal(e) { if(e.target.id === 'themeModal') document.getElementById('themeModal').style.display = 'none'; }
+    function setTheme(themeName) {
+        document.documentElement.setAttribute('data-theme', themeName);
+        document.getElementById('themeModal').style.display = 'none';
+        let color = '#EFF3F6'; if(themeName === 'dark') color = '#101412'; if(themeName === 'red') color = '#FFF8F7';
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', color);
+    }
+
+    // ==================== لاجیک وام ====================
+    function formatLoanInput(input) {
+        let val = toEnglishNum(input.value).replace(/[^0-9]/g, '');
+        if (val === "") { input.value = ""; return; }
+        input.value = toPersianNum(parseInt(val).toLocaleString());
+        autoCalcLoan();
+    }
+    function autoCalcLoan() {
+        const raw = toEnglishNum(document.getElementById('loanAmount').value);
+        if(raw && raw.trim() !== "") calculateLoan(false);
+    }
+    function calculateLoan(scroll) {
+        const rawAmount = toEnglishNum(document.getElementById('loanAmount').value);
+        if(rawAmount === "") { if(scroll) alert("مبلغ را وارد کنید"); return; }
+        const principal = parseFloat(rawAmount);
+        const months = parseInt(document.querySelector('input[name="lMonths"]:checked').value);
+        const rateVal = parseFloat(toEnglishNum(document.getElementById('loanRate').value));
+        const isExtra = document.getElementById('loanExtraMonth').checked;
+        const interestMonths = isExtra ? (months + 1) : months;
+        const totalInterest = (principal * (rateVal/100)) * interestMonths;
+        const totalPayable = principal + totalInterest;
+        let monthlyPayment = totalPayable / months;
+        monthlyPayment = Math.ceil(monthlyPayment / 5000) * 5000;
+        const resDiv = document.getElementById('loanResultArea');
+        document.getElementById('loanTotalDetail').innerText = "بازپرداخت: " + toPersianNum(formatNumber(Math.round(totalPayable)));
+        document.getElementById('loanInterestDetail').innerText = "سود خالص: " + toPersianNum(formatNumber(Math.round(totalInterest)));
+        document.getElementById('monthlyInstallment').innerText = toPersianNum(formatNumber(monthlyPayment)) + " تومان";
+        resDiv.style.display = "block";
+        if(scroll) resDiv.scrollIntoView({ behavior: 'smooth' });
+    }
+    function resetLoanApp() {
+        document.getElementById('loanAmount').value = "";
+        document.getElementById('loanResultArea').style.display = "none";
+        document.getElementById('lm4').checked = true;
+        document.getElementById('loanRate').value = "۳.۹";
+        document.getElementById('loanExtraMonth').checked = false;
+    }
+
+    // ==================== لاجیک چک ====================
+    let cheques = []; let baseDateJ = {}; 
+    (function initChequeApp() {
+        const d = document.getElementById('chD'), y = document.getElementById('chY'), bd = document.getElementById('baseD'), by = document.getElementById('baseY');
+        for(let i=1; i<=31; i++) { let opt = `<option value="${i}">${toPersianNum(i)}</option>`; d.innerHTML += opt; bd.innerHTML += opt; }
+        for(let i=1402; i<=1420; i++) { let opt = `<option value="${i}">${toPersianNum(i)}</option>`; y.innerHTML += opt; by.innerHTML += opt; }
+        const now = new Date();
+        const j = gregorianToJalali(now.getFullYear(), now.getMonth()+1, now.getDate());
+        baseDateJ = { y: j[0], m: j[1], d: j[2] };
+        document.getElementById('baseY').value = j[0]; document.getElementById('baseM').value = j[1]; document.getElementById('baseD').value = j[2];
+        updateDefaultDate();
+    })();
+    function updateBaseDate() {
+        baseDateJ.y = parseInt(document.getElementById('baseY').value);
+        baseDateJ.m = parseInt(document.getElementById('baseM').value);
+        baseDateJ.d = parseInt(document.getElementById('baseD').value);
+        calcChequeStats(); 
+    }
+    function updateDefaultDate() {
+        const step = parseInt(document.getElementById('chStep').value) || 1;
+        const now = new Date(); now.setMonth(now.getMonth() + step);
+        const j = gregorianToJalali(now.getFullYear(), now.getMonth()+1, now.getDate());
+        const ySelect = document.getElementById('chY'), mSelect = document.getElementById('chM'), dSelect = document.getElementById('chD');
+        if(ySelect.querySelector(`option[value="${j[0]}"]`)) ySelect.value = j[0];
+        mSelect.value = j[1]; dSelect.value = j[2];
+    }
+    function formatCurrency(input) {
+        let val = toEnglishNum(input.value).replace(/[^0-9]/g, '');
+        if(!val) { input.value = ''; return; }
+        input.value = toPersianNum(parseInt(val).toLocaleString());
+    }
+    function generateCheques() {
+        const rawVal = toEnglishNum(document.getElementById('chAmount').value);
+        const perAmount = parseInt(rawVal);
+        const count = parseInt(toEnglishNum(document.getElementById('chCount').value));
+        const step = parseInt(document.getElementById('chStep').value);
+        const sy = parseInt(document.getElementById('chY').value), sm = parseInt(document.getElementById('chM').value), sd = parseInt(document.getElementById('chD').value);
+        if(!perAmount || !count) { alert("مبلغ و تعداد الزامی است"); return; }
+        let allTotal = 0; cheques.forEach(c => allTotal += c.amount); allTotal += (perAmount * count);
+        let runningBalance = allTotal;
+        cheques.forEach(c => { c.balance = runningBalance - c.amount; runningBalance -= c.amount; });
+        for (let i = 0; i < count; i++) {
+            let monthsToAdd = i * step;
+            let currentTotalMonth = sm + monthsToAdd;
+            let ny = sy + Math.floor((currentTotalMonth - 1) / 12);
+            let nm = ((currentTotalMonth - 1) % 12) + 1;
+            let nd = sd;
+            if (nm > 6 && nd == 31) nd = 30; if (nm == 12 && nd > 29) nd = 29;
+            runningBalance -= perAmount;
+            let days = calculateDaysDiff(baseDateJ.y, baseDateJ.m, baseDateJ.d, ny, nm, nd);
+            cheques.push({ y: ny, m: nm, d: nd, amount: perAmount, balance: runningBalance, days: days });
+        }
+        renderCheques();
+    }
+    function renderCheques() {
+        const list = document.getElementById('chequeListEl'); list.innerHTML = "";
+        cheques.forEach((ch, idx) => {
+            ch.days = calculateDaysDiff(baseDateJ.y, baseDateJ.m, baseDateJ.d, ch.y, ch.m, ch.d);
+            list.innerHTML += `
+            <div class="cheque-item">
+                <div class="ch-info">
+                    <div class="ch-top"><span>${toPersianNum(ch.y)}/${toPersianNum(ch.m)}/${toPersianNum(ch.d)}</span><span style="color:var(--md-sys-color-primary);">${toPersianNum(ch.amount.toLocaleString())}</span></div>
+                    <div class="ch-btm"><span>مانده: ${toPersianNum(ch.balance.toLocaleString())}</span><span>${toPersianNum(ch.days)} روز</span></div>
+                </div>
+                <div class="btn-del" onclick="deleteCheque(${idx})">×</div>
+            </div>`;
+        });
+        calcChequeStats();
+    }
+    function deleteCheque(idx) { 
+        cheques.splice(idx, 1); 
+        let total = 0; cheques.forEach(c => total += c.amount); let running = total;
+        cheques.forEach(c => { running -= c.amount; c.balance = running; });
+        renderCheques(); 
+    }
+    function calcChequeStats() {
+        let total = 0, weightedSum = 0;
+        cheques.forEach(ch => { total += ch.amount; let days = calculateDaysDiff(baseDateJ.y, baseDateJ.m, baseDateJ.d, ch.y, ch.m, ch.d); weightedSum += (ch.amount * days); });
+        let rasDays = total > 0 ? weightedSum / total : 0;
+        const rateStr = toEnglishNum(document.getElementById('chequeRate').value);
+        let rate = parseFloat(rateStr) || 0;
+        let interest = (rate > 0) ? (total * (rate/100) * (rasDays/30)) : 0;
+        let rasDateStr = "---";
+        if(total > 0) {
+            let baseG = jalaliToGregorian(baseDateJ.y, baseDateJ.m, baseDateJ.d);
+            let baseMs = new Date(baseG[0], baseG[1]-1, baseG[2]).getTime();
+            let targetMs = baseMs + (rasDays * 86400000);
+            let targetG = new Date(targetMs);
+            let tJ = gregorianToJalali(targetG.getFullYear(), targetG.getMonth()+1, targetG.getDate());
+            rasDateStr = `${toPersianNum(tJ[0])}/${toPersianNum(tJ[1])}/${toPersianNum(tJ[2])}`;
+        }
+        document.getElementById('fCount').innerText = toPersianNum(cheques.length);
+        document.getElementById('fRasDays').innerText = toPersianNum(Math.round(rasDays));
+        document.getElementById('fTotal').innerText = toPersianNum(total.toLocaleString());
+        document.getElementById('fInterest').innerText = toPersianNum(Math.round(interest).toLocaleString());
+        document.getElementById('fBalance').innerText = toPersianNum(Math.round(total - interest).toLocaleString());
+        document.getElementById('fRasDate').innerText = rasDateStr;
+    }
+    function resetChequeApp() {
+        cheques = []; document.getElementById('chAmount').value = ""; document.getElementById('chCount').value = "";
+        const now = new Date(); const j = gregorianToJalali(now.getFullYear(), now.getMonth()+1, now.getDate());
+        baseDateJ = { y: j[0], m: j[1], d: j[2] };
+        document.getElementById('baseY').value = j[0]; document.getElementById('baseM').value = j[1]; document.getElementById('baseD').value = j[2];
+        renderCheques(); updateDefaultDate(); 
+    }
+    function calculateDaysDiff(y1, m1, d1, y2, m2, d2) {
+        let g1 = jalaliToGregorian(y1, m1, d1); let g2 = jalaliToGregorian(y2, m2, d2);
+        let date1 = new Date(g1[0], g1[1]-1, g1[2]); let date2 = new Date(g2[0], g2[1]-1, g2[2]);
+        return Math.ceil((date2 - date1) / (1000 * 60 * 60 * 24)); 
+    }
+    function jalaliToGregorian(j_y, j_m, j_d) {
+        j_y = parseInt(j_y); j_m = parseInt(j_m); j_d = parseInt(j_d);
+        var jy = j_y - 979; var jm = j_m - 1; var jd = j_d - 1;
+        var j_day_no = 365 * jy + parseInt(jy / 33) * 8 + parseInt((jy % 33 + 3) / 4);
+        for (var i = 0; i < jm; ++i) j_day_no += (i < 6) ? 31 : 30;
+        j_day_no += jd;
+        var g_day_no = j_day_no + 79;
+        var gy = 1600 + 400 * parseInt(g_day_no / 146097);
+        g_day_no = g_day_no % 146097;
+        var leap = true;
+        if (g_day_no >= 36525) { g_day_no--; gy += 100 * parseInt(g_day_no / 36524); g_day_no = g_day_no % 36524; if (g_day_no >= 365) g_day_no++; else leap = false; }
+        gy += 4 * parseInt(g_day_no / 1461); g_day_no %= 1461;
+        if (g_day_no >= 366) { leap = false; g_day_no--; gy += parseInt(g_day_no / 365); g_day_no = g_day_no % 365; }
+        for (var i = 0; g_day_no >= 365 + (i == 1 && leap); i++) { g_day_no -= 365 + (i == 1 && leap); gy++; }
+        var gm = 0; var gd = 0; var gm_days = [31, (leap ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        for (var i = 0; i < 12; i++) { if (g_day_no < gm_days[i]) { gm = i + 1; gd = g_day_no + 1; break; } g_day_no -= gm_days[i]; }
+        return [gy, gm, gd];
+    }
+    function gregorianToJalali(g_y, g_m, g_d) {
+        g_y = parseInt(g_y); g_m = parseInt(g_m); g_d = parseInt(g_d);
+        var g_days_in_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        if ((g_y % 4 == 0 && g_y % 100 != 0) || (g_y % 400 == 0)) g_days_in_month[1] = 29;
+        var gy = g_y - 1600; var gm = g_m - 1; var gd = g_d - 1;
+        var g_day_no = 365 * gy + parseInt((gy + 3) / 4) - parseInt((gy + 99) / 100) + parseInt((gy + 399) / 400);
+        for (var i = 0; i < gm; ++i) g_day_no += g_days_in_month[i];
+        g_day_no += gd;
+        var j_day_no = g_day_no - 79;
+        var j_np = parseInt(j_day_no / 12053);
+        j_day_no = j_day_no % 12053;
+        var jy = 979 + 33 * j_np + 4 * parseInt(j_day_no / 1461);
+        j_day_no %= 1461;
+        if (j_day_no >= 366) { jy += parseInt((j_day_no - 1) / 365); j_day_no = (j_day_no - 1) % 365; }
+        var jm = 0; var jd = 0;
+        for (var i = 0; i < 11 && j_day_no >= (i < 6 ? 31 : 30); ++i) { j_day_no -= (i < 6 ? 31 : 30); jm++; }
+        jm++; jd = j_day_no + 1;
+        return [jy, jm, jd];
+    }
+</script>
+
+</body>
+</html>
