@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    
+    <meta name="theme-color" content="#EFF3F6">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="حسابدار شخصی">
-    <meta name="theme-color" content="#EFF3F6">
+    <meta name="apple-mobile-web-app-title" content="حسابدار هوشمند">
     <title>اپلیکیشن مالی هوشمند</title>
     
     <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEyOCIgZmlsbD0iIzAwNkM1MSIvPjxwYXRoIGQ9Ik0xNTYgMTU2aDIwMHYyMDBHMTU2eiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik0zNTYgMTU2djIwMEgxNTZWMTU2aDIwMHptNDAgNDBIMTE2djEyMGgyODBWMTk2em0wIDE2MEgxMTZ2NDBoMjgwdi00MHoiIGZpbGw9IiM4REY4Q0QiIG9wYWNpdHk9Ii4yIi8+PHBhdGggZD0iTTIyNiAyMDZoNjB2NjBoLTYwem0tNDAgMGgtNDB2NjBoNDB6bTQwIDgwSDE4NnY0MGg0MHptODAtODBIMjY2djYwaDQwem0wIDgwSDI2NnY0MGg0MHptODAtODBIMzQ2djYwaDQwem0wIDgwSDM0NnY0MGg0MHoiIGZpbGw9IiMwMDJCMjAiLz48L3N2Zz4=">
@@ -16,7 +15,7 @@
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
     
     <style>
-        /* --- متغیرهای متریال دیزاین --- */
+        /* --- متغیرها --- */
         :root {
             --md-sys-color-primary: #006C51;
             --md-sys-color-on-primary: #FFFFFF;
@@ -31,7 +30,6 @@
             --md-sys-color-background: #EFF3F6;
             --radius-L: 20px; --radius-M: 10px;
         }
-
         [data-theme="dark"] {
             --md-sys-color-primary: #70DBB3;
             --md-sys-color-on-primary: #003828;
@@ -43,7 +41,6 @@
             --md-sys-color-outline: #89938D;
             --md-sys-color-background: #101412;
         }
-
         [data-theme="red"] {
             --md-sys-color-primary: #B3261E;
             --md-sys-color-on-primary: #FFFFFF;
@@ -55,31 +52,216 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Vazirmatn', sans-serif; background-color: var(--md-sys-color-background); color: var(--md-sys-color-on-surface); margin: 0; padding: 0; display: flex; justify-content: center; height: 100dvh; overflow: hidden; }
         
-        .app-frame { width: 100%; background-color: var(--md-sys-color-surface); height: 100%; position: relative; display: none; /* مخفی تا زمان لاگین */ flex-direction: column; overflow: hidden; }
+        .app-frame { width: 100%; background-color: var(--md-sys-color-surface); height: 100%; position: relative; display: none; flex-direction: column; overflow: hidden; }
         @media (min-width: 600px) { body { align-items: center; padding: 40px 0; background-color: #ddd; } .app-frame { max-width: 400px; height: 85vh; border-radius: 32px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); border: 8px solid var(--md-sys-color-surface-variant); } }
 
-        /* --- استایل‌های لاگین --- */
-        #loginScreen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: var(--md-sys-color-primary);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 9999;
-        }
-        .login-card {
-            background: rgba(255,255,255,0.95); padding: 30px; border-radius: 24px;
-            width: 80%; max-width: 320px; text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        .login-icon { font-size: 50px; margin-bottom: 20px; }
-        .login-input {
-            width: 100%; padding: 12px; margin-bottom: 15px;
-            border: 1px solid #ccc; border-radius: 12px; font-family: 'Vazirmatn';
-            font-size: 16px; text-align: center;
-        }
-        .login-btn {
-            width: 100%; padding: 12px; border-radius: 12px;
-            background: var(--md-sys-color-primary); color: white;
-            border: none; font-size: 16px; font-weight: bold; cursor: pointer;
+        /* Login */
+        #loginScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--md-sys-color-primary); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
+        .login-card { background: rgba(255,255,255,0.95); padding: 30px; border-radius: 24px; width: 80%; max-width: 320px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .login-input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 12px; font-family: 'Vazirmatn'; font-size: 16px; text-align: center; }
+        .login-btn { width: 100%; padding: 12px; border-radius: 12px; background: var(--md-sys-color-primary); color: white; border: none; font-size: 16px; font-weight: bold; cursor: pointer; }
+
+        /* Header & Tabs */
+        .app-header { padding: 10px 10px 5px 10px; background: var(--md-sys-color-surface); flex-shrink: 0; z-index: 10; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .tab-group { display: flex; background-color: var(--md-sys-color-surface-variant); border-radius: 50px; position: relative; height: 40px; overflow: hidden; }
+        .tab-item { flex: 1; text-align: center; line-height: 40px; font-size: 12px; font-weight: bold; color: var(--md-sys-color-on-surface); cursor: pointer; z-index: 2; opacity: 0.7; transition: opacity 0.2s; white-space: nowrap; }
+        .tab-item.active { color: var(--md-sys-color-on-primary-container); opacity: 1; }
+        
+        /* نشانگر تب برای 3 حالت */
+        .tab-indicator { position: absolute; top: 3px; bottom: 3px; width: calc(33.33% - 4px); background-color: var(--md-sys-color-surface); border-radius: 40px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); z-index: 1; right: 2px; }
+        /* منطق حرکت نشانگر در RTL */
+        .tab-group[data-pos="0"] .tab-indicator { transform: translateX(0); }
+        .tab-group[data-pos="1"] .tab-indicator { transform: translateX(calc(-100% - 2px)); }
+        .tab-group[data-pos="2"] .tab-indicator { transform: translateX(calc(-200% - 4px)); }
+
+        .content-scrollable { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 120px; -webkit-overflow-scrolling: touch; }
+        .content-scrollable::-webkit-scrollbar { width: 0px; background: transparent; }
+        .page-section { display: none; animation: fadeIn 0.3s; }
+        .page-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .md-card { background-color: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-surface-variant); border-radius: var(--radius-L); padding: 15px; margin-bottom: 12px; }
+        
+        .compact-row { display: flex; gap: 8px; margin-bottom: 10px; }
+        .input-box { flex: 1; position: relative; }
+        .input-box label { font-size: 11px; color: var(--md-sys-color-primary); margin-bottom: 4px; display: block; font-weight: bold; }
+        input, select { width: 100%; padding: 0 10px; font-family: 'Vazirmatn'; font-size: 14px; background-color: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline); border-radius: var(--radius-M); color: var(--md-sys-color-on-surface); outline: none; text-align: center; height: 42px; }
+        input:focus, select:focus { border-color: var(--md-sys-color-primary); box-shadow: 0 0 0 1px var(--md-sys-color-primary); }
+        
+        .btn-primary { width: 100%; padding: 12px; border-radius: 100px; border: none; background-color: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); font-family: 'Vazirmatn'; font-size: 14px; font-weight: bold; cursor: pointer; margin-top: 5px; }
+        .btn-outline { background: transparent; border: 1px solid var(--md-sys-color-outline); color: var(--md-sys-color-outline); }
+
+        /* Chips & Switches */
+        .chip-group { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 5px; }
+        .chip-btn { padding: 8px 0; border-radius: 10px; font-size: 12px; text-align: center; background-color: var(--md-sys-color-surface-variant); border: 1px solid transparent; cursor: pointer; }
+        .chip-btn:active { background-color: var(--md-sys-color-outline); }
+        
+        .switch-box { display: flex; align-items: center; background: var(--md-sys-color-primary-container); padding: 4px 10px; border-radius: 8px; color: var(--md-sys-color-on-primary-container); font-size: 11px; font-weight: bold; }
+        .toggle-switch { position: relative; width: 34px; height: 20px; margin-right: 5px; }
+        .toggle-switch input { opacity: 0; }
+        .slider { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.2); border-radius: 20px; transition: .4s; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background: white; border-radius: 50%; transition: .4s; }
+        input:checked + .slider { background: var(--md-sys-color-primary); }
+        html[dir="rtl"] input:checked + .slider:before { transform: translateX(14px); }
+
+        /* Results & Footer */
+        .result-box { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); text-align: center; padding: 15px; border-radius: 16px; margin-top: 10px; display: none; }
+        .res-big { font-size: 20px; font-weight: 900; margin: 5px 0; }
+        .res-small { font-size: 12px; opacity: 0.8; }
+        
+        .sticky-footer { position: absolute; bottom: 0; left: 0; right: 0; background: var(--md-sys-color-on-surface); color: var(--md-sys-color-surface); padding: 10px 15px 15px 15px; border-radius: 20px 20px 0 0; box-shadow: 0 -4px 15px rgba(0,0,0,0.15); z-index: 100; display: none; max-height: 35vh; overflow-y: auto; }
+        .footer-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; text-align: center; }
+        .f-item span:first-child { font-size: 14px; font-weight: bold; display: block; line-height: 1.2; }
+        .f-item span:last-child { font-size: 10px; opacity: 0.7; margin-top: 2px; }
+        .f-total-row { grid-column: span 4; border-top: 1px solid rgba(255,255,255,0.15); margin-top: 8px; padding-top: 8px; display: flex; justify-content: space-between; align-items: center; }
+        
+        .fab { position: absolute; bottom: 30px; left: 20px; width: 48px; height: 48px; border-radius: 14px; background-color: var(--md-sys-color-secondary); color: white; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); cursor: pointer; z-index: 200; transition: bottom 0.3s ease; }
+        .signature { text-align: center; font-size: 10px; opacity: 0.4; margin-top: 20px; margin-bottom: 10px; }
+        
+        /* Cheque List */
+        .cheque-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--md-sys-color-surface-variant); font-size: 13px; }
+        .base-date-container { display: flex; align-items: center; justify-content: center; gap: 2px; }
+        .base-date-select { padding: 0 2px; height: 30px; font-size: 12px; background: transparent; border: 1px solid var(--md-sys-color-surface-variant); border-radius: 6px; color: var(--md-sys-color-primary); font-weight: bold; width: auto; min-width: 40px; }
+        .btn-del { color: var(--md-sys-color-error); padding: 5px 10px; cursor: pointer; font-size: 18px; }
+
+        /* Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+        .modal-card { background: var(--md-sys-color-surface); padding: 20px; border-radius: 20px; width: 70%; max-width: 250px; text-align: center; }
+        .modal-btn { width: 100%; padding: 10px; margin-bottom: 5px; border-radius: 10px; border:none; color:white; font-size: 13px; }
+    </style>
+</head>
+<body>
+
+    <div id="loginScreen">
+        <div class="login-card">
+            <h3 style="margin-top:0; color:#333;">ورود امن</h3>
+            <input type="text" id="username" class="login-input" placeholder="نام کاربری">
+            <input type="password" id="password" class="login-input" placeholder="رمز عبور">
+            <button class="login-btn" onclick="checkLogin()">ورود</button>
+            <div id="loginError" style="color:red; font-size:12px; margin-top:10px; display:none;">اطلاعات اشتباه است</div>
+        </div>
+    </div>
+
+    <div class="app-frame" id="appFrame">
+        <div class="app-header">
+            <h2 style="margin:0 0 10px 0; text-align:center; font-size:16px; color:var(--md-sys-color-primary);">جعبه ابزار مالی</h2>
+            <div class="tab-group" id="mainTabGroup" data-pos="0">
+                <div class="tab-item active" onclick="switchTab('loan')">اقساط وام</div>
+                <div class="tab-item" onclick="switchTab('reverse')">معکوس</div>
+                <div class="tab-item" onclick="switchTab('cheque')">رأس‌گیر</div>
+                <div class="tab-indicator"></div>
+            </div>
+        </div>
+
+        <div class="content-scrollable">
+            
+            <div id="tab-loan" class="page-section active">
+                <div class="md-card">
+                    <div class="compact-row">
+                        <div class="input-box" style="flex:2;">
+                            <label>مبلغ مانده (تومان)</label>
+                            <input type="tel" id="loanAmount" placeholder="مثلاً ۵۰,۰۰۰,۰۰۰" oninput="formatLoanInput(this)">
+                        </div>
+                        <div class="input-box">
+                            <label>سود %</label>
+                            <input type="tel" id="loanRate" value="۳.۹" oninput="forcePersianInput(this); autoCalcLoan();">
+                        </div>
+                    </div>
+
+                    <div class="compact-row" style="align-items: flex-end;">
+                        <div class="input-box" style="flex:1;">
+                            <label>تعداد اقساط (ماه)</label>
+                            <input type="tel" id="loanMonths" value="۴" oninput="forcePersianInput(this); autoCalcLoan();">
+                        </div>
+                        <div class="switch-box" style="height: 42px;">
+                            <span style="margin-left:5px;">سود +۱</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="loanExtraMonth" onchange="autoCalcLoan()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="chip-group">
+                        <div class="chip-btn" onclick="setLoanMonth(4)">۴ ماه</div>
+                        <div class="chip-btn" onclick="setLoanMonth(8)">۸ ماه</div>
+                        <div class="chip-btn" onclick="setLoanMonth(12)">۱۲ ماه</div>
+                        <div class="chip-btn" onclick="setLoanMonth(16)">۱۶ ماه</div>
+                    </div>
+
+                    <div style="display:flex; gap:10px; margin-top:15px;">
+                        <button class="btn-primary btn-outline" style="flex:1;" onclick="resetLoanApp()">ریست</button>
+                        <button class="btn-primary" style="flex:2;" onclick="calculateLoan(true)">محاسبه</button>
+                    </div>
+                </div>
+
+                <div id="loanResultArea" class="result-box">
+                    <div class="res-small" id="loanTotalDetail"></div>
+                    <div class="res-big" id="monthlyInstallment"></div>
+                    <div class="res-small" style="border-top:1px dashed rgba(0,0,0,0.2); padding-top:5px; margin-top:5px;" id="loanInterestDetail"></div>
+                </div>
+                <div class="signature">برنامه نویس: حیدر حیدری</div>
+            </div>
+
+            <div id="tab-reverse" class="page-section">
+                <div class="md-card">
+                    <div style="text-align:center; font-size:12px; margin-bottom:15px; color:var(--md-sys-color-primary);">محاسبه مبلغ نقد بر اساس توان پرداخت قسط</div>
+                    
+                    <div class="compact-row">
+                        <div class="input-box" style="flex:2;">
+                            <label>توان پرداخت قسط (تومان)</label>
+                            <input type="tel" id="revMonthly" placeholder="مثلاً ۵,۰۰۰,۰۰۰" oninput="formatRevInput(this)">
+                        </div>
+                        <div class="input-box">
+                            <label>سود %</label>
+                            <input type="tel" id="revRate" value="۳.۹" oninput="forcePersianInput(this); autoCalcReverse();">
+                        </div>
+                    </div>
+
+                    <div class="compact-row" style="align-items: flex-end;">
+                        <div class="input-box" style="flex:1;">
+                            <label>تعداد اقساط</label>
+                            <input type="tel" id="revMonths" value="۴" oninput="forcePersianInput(this); autoCalcReverse();">
+                        </div>
+                        <div class="switch-box" style="height: 42px;">
+                            <span style="margin-left:5px;">سود +۱</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="revExtraMonth" onchange="autoCalcReverse()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="chip-group">
+                        <div class="chip-btn" onclick="setRevMonth(4)">۴ ماه</div>
+                        <div class="chip-btn" onclick="setRevMonth(8)">۸ ماه</div>
+                        <div class="chip-btn" onclick="setRevMonth(12)">۱۲ ماه</div>
+                        <div class="chip-btn" onclick="setRevMonth(16)">۱۶ ماه</div>
+                    </div>
+
+                    <div style="display:flex; gap:10px; margin-top:15px;">
+                        <button class="btn-primary btn-outline" style="flex:1;" onclick="resetRevApp()">ریست</button>
+                        <button class="btn-primary" style="flex:2;" onclick="calculateReverse(true)">محاسبه</button>
+                    </div>
+                </div>
+
+                <div id="revResultArea" class="result-box">
+                    <div class="res-small">مبلغ جنس (نقد):</div>
+                    <div class="res-big" id="revPrincipal"></div>
+                    <div class="res-small" style="margin-top:5px;" id="revTotalPayable"></div>
+                </div>
+                <div class="signature">برنامه نویس: حیدر حیدری</div>
+            </div>
+
+            <div id="tab-cheque" class="page-section">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; padding:0 5px;">
+                    <div style="display:flex; align-items:center; gap:5px; background:var(--md-sys-color-surface); padding:5px; border-radius:8px; border:1px solid var(--md-sys-color-outline);">
+                        <span style="font-size:11px;">درصد:</span>
+                        <input type="tel" id="chequeRate" value="۵" oninput="forcePersianInput(this); calcChequeStats()" style="width:40px; height:25px; padding:0; border:none; background:transparent;">
+                    </div>
+                    <div style="display:flex; flex-direction:column; align-items:center;">
+                        <span style="font-size:10px; color:var(--md-sys-color-outline); margin-bottom:2px;">تاریخ مبنا</span>
+                        <div class            border: none; font-size: 16px; font-weight: bold; cursor: pointer;
         }
 
         /* --- هدر --- */
