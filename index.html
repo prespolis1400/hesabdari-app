@@ -5,147 +5,162 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#F3F4F6">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>دستیار مالی</title>
     
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/jalaali-js/dist/jalaali.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jalaali-js/dist/jalaali-js.min.js"></script>
     
     <style>
         :root {
-            --primary: #00695C;
-            --primary-light: #B2DFDB;
-            --bg-app: #F3F4F6;
-            --bg-card: #FFFFFF;
-            --text-main: #1F2937;
-            --text-muted: #6B7280;
-            --border: #E5E7EB;
-            --accent: #F59E0B;
-            --danger: #EF4444;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            --radius: 16px;
+            /* Light Theme */
+            --primary: #00695C; --primary-light: #B2DFDB; --bg-app: #F3F4F6;
+            --bg-card: #FFFFFF; --text-main: #1F2937; --text-muted: #6B7280;
+            --border: #E5E7EB; --accent: #F59E0B; --danger: #EF4444;
+            --active-toggle: #00695C; /* رنگ دکمه روشن */
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); --radius: 18px;
         }
 
         [data-theme="dark"] {
-            --primary: #80CBC4;
-            --primary-light: #004D40;
-            --bg-app: #111827;
-            --bg-card: #1F2937;
-            --text-main: #F9FAFB;
-            --text-muted: #9CA3AF;
-            --border: #374151;
+            --primary: #80CBC4; --primary-light: #004D40; --bg-app: #111827;
+            --bg-card: #1F2937; --text-main: #F9FAFB; --text-muted: #9CA3AF; --border: #374151;
+            --active-toggle: #80CBC4;
             --shadow: none;
         }
 
+        [data-theme="year"] {
+            /* Peach Fuzz Theme */
+            --primary: #FF8A65; /* Vivid Peach */
+            --primary-light: #FFCCBC; 
+            --bg-app: #FFF3E0;
+            --bg-card: #FFFFFF;
+            --text-main: #4E342E; 
+            --text-muted: #8D6E63;
+            --border: #FFAB91;
+            --accent: #FF7043;
+            --danger: #D32F2F;
+            --active-toggle: #00897B; /* Teal for high contrast toggle */
+            --shadow: 0 8px 20px -5px rgba(255, 138, 101, 0.25);
+        }
+
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        body { font-family: 'Vazirmatn', sans-serif; background-color: var(--bg-app); color: var(--text-main); margin: 0; padding: 0; height: 100dvh; display: flex; justify-content: center; overflow: hidden; transition: background 0.4s; }
+
+        .app-container { width: 100%; height: 100%; max-width: 450px; background-color: var(--bg-app); display: flex; flex-direction: column; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
         
-        body {
-            /* فونت پیش‌فرض سیستم اگر وزیر لود نشد */
-            font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg-app);
-            color: var(--text-main);
-            margin: 0; padding: 0;
-            height: 100dvh;
-            display: flex; justify-content: center;
-            overflow: hidden;
-            transition: background 0.3s;
-        }
-
-        .app-container {
-            width: 100%; height: 100%; max-width: 450px;
-            background-color: var(--bg-app);
-            display: flex; flex-direction: column;
-            position: relative;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-        }
-
-        /* --- Header --- */
-        .header { padding: 15px 20px; background: var(--bg-app); z-index: 10; }
+        /* Header */
+        .header { padding: 15px 20px; background: var(--bg-app); z-index: 10; transition: 0.3s; }
         .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .header-title { font-size: 18px; font-weight: 900; color: var(--primary); margin: 0; }
+        .header-title { font-size: 19px; font-weight: 900; color: var(--primary); margin: 0; }
+        .vip-badge { background: gold; color: #000; font-size: 10px; font-weight: 900; padding: 2px 8px; border-radius: 20px; display: none; }
         .header-actions { display: flex; gap: 10px; }
-        .icon-btn { background: var(--bg-card); color: var(--text-muted); border: 1px solid var(--border); border-radius: 10px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-size: 18px; }
-        .icon-btn:active { transform: scale(0.9); background: var(--primary-light); color: var(--primary); }
-
-        /* --- Tabs --- */
-        .tab-container { background: var(--bg-card); border-radius: 12px; padding: 4px; display: flex; position: relative; box-shadow: var(--shadow); }
+        .icon-btn { background: var(--bg-card); color: var(--text-muted); border: 1px solid var(--border); border-radius: 12px; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-size: 18px; box-shadow: var(--shadow); }
+        
+        /* Tabs */
+        .tab-container { background: var(--bg-card); border-radius: 14px; padding: 5px; display: flex; position: relative; box-shadow: var(--shadow); }
         .tab-btn { flex: 1; text-align: center; padding: 10px 0; font-size: 13px; font-weight: bold; color: var(--text-muted); cursor: pointer; z-index: 2; transition: color 0.3s; border-radius: 10px; }
         .tab-btn.active { color: var(--primary); }
-        /* استایل ساده‌تر برای تب جهت جلوگیری از باگ */
-        .tab-bg { 
-            position: absolute; top: 4px; bottom: 4px; right: 4px; 
-            width: calc(33.33% - 5px); 
-            background: var(--primary-light); border-radius: 10px; opacity: 0.3; 
-            transition: transform 0.3s ease; 
-            z-index: 1; 
-        }
+        .tab-bg { position: absolute; top: 5px; bottom: 5px; right: 5px; width: calc(33.33% - 6px); background: var(--primary-light); border-radius: 10px; opacity: 0.3; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1; }
 
-        /* --- Content --- */
-        .main-content { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 180px; scroll-behavior: smooth; }
-        .main-content::-webkit-scrollbar { width: 0; }
-        .page { display: none; }
-        .page.active { display: block; animation: fadeIn 0.3s; }
+        /* Content */
+        .main-content { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 180px; scroll-behavior: smooth; touch-action: pan-y; /* Allow vertical scroll but capture horizontal for swipe manually if needed */ }
+        .page { display: none; animation: fadeIn 0.3s; }
+        .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Cards & Inputs */
-        .card { background: var(--bg-card); border-radius: var(--radius); padding: 20px; margin-bottom: 15px; box-shadow: var(--shadow); border: 1px solid var(--border); }
-        .input-group { margin-bottom: 15px; position: relative; }
-        .input-group label { display: block; font-size: 12px; font-weight: bold; color: var(--text-muted); margin-bottom: 6px; }
-        .input-row { display: flex; gap: 10px; }
+        .card { background: var(--bg-card); border-radius: var(--radius); padding: 20px; margin-bottom: 15px; box-shadow: var(--shadow); border: 1px solid var(--border); transition: 0.3s; }
         
-        input, select { width: 100%; padding: 12px; background: var(--bg-app); border: 1px solid transparent; border-radius: 12px; font-family: 'Vazirmatn', sans-serif; font-size: 16px; color: var(--text-main); text-align: center; transition: 0.2s; height: 48px; }
+        .input-group { flex: 1; display: flex; flex-direction: column; } /* Changed for alignment */
+        
+        .input-group label { 
+            display: flex; justify-content: space-between; align-items: center; 
+            font-size: 12px; font-weight: bold; color: var(--text-muted); 
+            margin-bottom: 8px; min-height: 24px; /* Fixed height for alignment */
+        }
+        
+        .input-row { display: flex; gap: 12px; margin-bottom: 15px; }
+        
+        input, select { width: 100%; padding: 12px; background: var(--bg-app); border: 1px solid transparent; border-radius: 12px; font-family: 'Vazirmatn'; font-size: 16px; color: var(--text-main); text-align: center; height: 48px; transition: 0.2s; font-weight: bold; }
         input:focus, select:focus { background: var(--bg-card); border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
 
         /* Buttons */
-        .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-family: 'Vazirmatn', sans-serif; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;}
-        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(0,105,92, 0.3); }
+        .btn { width: 100%; padding: 14px; border-radius: 14px; border: none; font-family: 'Vazirmatn'; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;}
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .btn-primary:active { transform: scale(0.98); }
-        .btn-ghost { background: transparent; color: var(--text-muted); font-size: 12px; padding: 5px; margin-top: 0; width: auto;}
-        .btn-add { background: var(--accent); color: white; margin-top: 0; height: 48px; width: 48px; border-radius: 12px; font-size: 24px; padding: 0; }
+        .btn-ghost { background: transparent; color: var(--text-muted); font-size: 12px; padding: 8px; margin-top: 5px; width: auto; border-radius: 8px; }
+        .btn-ghost:active { background: rgba(0,0,0,0.05); }
+        .btn-add { background: var(--accent); color: white; margin-top: 0; height: 48px; width: 48px; border-radius: 12px; font-size: 24px; padding: 0; border:none; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .btn-transfer { background: var(--bg-card); color: var(--primary); border: 1.5px solid var(--primary); border-radius: 12px; padding: 10px; font-size: 13px; font-weight: bold; margin-top: 15px; cursor: pointer; width: 100%; transition:0.2s; }
+        .btn-transfer:active { background: var(--primary-light); }
+
+        /* Switches & Rate Badge */
+        .rate-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            background: var(--bg-app); border: 1px solid var(--border);
+            padding: 3px 8px; border-radius: 8px; cursor: pointer;
+            transition: 0.3s;
+        }
+        .rate-badge.active { background: var(--active-toggle); border-color: var(--active-toggle); color: white; }
+        .rate-text { font-size: 10px; font-weight: bold; }
+        .rate-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-muted); transition: 0.3s; }
+        .rate-badge.active .rate-dot { background: white; box-shadow: 0 0 4px rgba(255,255,255,0.8); }
+
+        .toggle-switch { position: relative; width: 36px; height: 20px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--border); transition: .4s; border-radius: 20px; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+        input:checked + .slider { background-color: var(--active-toggle); }
+        html[dir="rtl"] input:checked + .slider:before { transform: translateX(16px); }
 
         /* Chips */
         .chips { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 15px 0; }
-        .chip { background: var(--bg-app); padding: 8px 0; border-radius: 8px; font-size: 12px; text-align: center; color: var(--text-muted); cursor: pointer; border: 1px solid transparent; }
-        .chip.selected { background: var(--primary-light); color: var(--primary); border-color: var(--primary); font-weight: bold; }
+        .chip { background: var(--bg-app); padding: 10px 0; border-radius: 10px; font-size: 12px; text-align: center; color: var(--text-muted); cursor: pointer; border: 1px solid transparent; transition: 0.2s; font-weight: 600; }
+        .chip.selected { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 3px 8px rgba(0,0,0,0.15); transform: translateY(-1px); }
 
-        .mode-switch { display: flex; background: var(--bg-app); padding: 3px; border-radius: 10px; margin-bottom: 15px; }
-        .mode-btn { flex: 1; padding: 8px; text-align: center; font-size: 13px; cursor: pointer; border-radius: 8px; color: var(--text-muted); transition: 0.2s; font-weight: bold; }
+        /* Mode Switch */
+        .mode-switch { display: flex; background: var(--bg-app); padding: 4px; border-radius: 12px; margin-bottom: 15px; border: 1px solid var(--border); }
+        .mode-btn { flex: 1; padding: 8px; text-align: center; font-size: 12px; cursor: pointer; border-radius: 9px; color: var(--text-muted); transition: 0.3s; font-weight: bold; }
         .mode-btn.active { background: var(--bg-card); color: var(--primary); box-shadow: var(--shadow); }
 
-        .result-panel { background: var(--primary); color: white; text-align: center; display: none; margin-top: 15px; border-radius: 16px; padding: 15px; }
-        .res-val { font-size: 24px; font-weight: 900; margin: 8px 0; letter-spacing: -1px; }
-        .res-lbl { font-size: 12px; opacity: 0.9; }
-        .res-sub { border-top: 1px dashed rgba(255,255,255,0.3); margin-top: 10px; padding-top: 10px; font-size: 13px; }
+        /* Result Panel */
+        .result-panel { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; text-align: center; display: none; margin-top: 15px; border-radius: 18px; padding: 20px; box-shadow: 0 8px 20px -5px rgba(0,0,0,0.2); position: relative; overflow: hidden; }
+        .result-panel::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0) 60%); pointer-events: none; }
+        .res-val { font-size: 26px; font-weight: 900; margin: 8px 0; letter-spacing: -1px; text-shadow: 0 2px 4px rgba(0,0,0,0.1); position: relative; }
+        .res-lbl { font-size: 12px; opacity: 0.95; position: relative; }
+        .res-sub { border-top: 1px dashed rgba(255,255,255,0.3); margin-top: 12px; padding-top: 12px; font-size: 13px; position: relative; }
 
+        /* Cheque List */
         .cheque-list { margin-top: 10px; }
-        .cheque-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); animation: fadeIn 0.2s; }
-        .cheque-row:last-child { border: none; }
-        .c-date { font-weight: bold; font-size: 14px; }
-        .c-amt { color: var(--primary); font-weight: bold; font-size: 14px; }
-        .c-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-        .btn-del { color: var(--danger); font-size: 20px; cursor: pointer; padding: 0 10px; }
+        .cheque-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); animation: slideIn 0.2s; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(5px); } to { opacity: 1; transform: translateX(0); } }
+        .c-date { font-weight: bold; font-size: 14px; color: var(--text-main); }
+        .c-amt { color: var(--primary); font-weight: 800; font-size: 14px; }
+        .btn-del { color: var(--danger); font-size: 20px; cursor: pointer; padding: 2px 8px; background: rgba(239, 68, 68, 0.08); border-radius: 6px; }
+        .empty-list { text-align: center; padding: 25px; color: var(--text-muted); font-size: 13px; opacity: 0.6; }
 
-        .fixed-footer { position: absolute; bottom: 0; left: 0; right: 0; background: var(--bg-card); padding: 15px 20px 20px 20px; border-radius: 24px 24px 0 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.08); z-index: 100; display: none; }
-        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; text-align: center; }
+        /* Footer */
+        .fixed-footer { position: absolute; bottom: 0; left: 0; right: 0; background: var(--bg-card); padding: 15px 20px 25px 20px; border-radius: 24px 24px 0 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.06); z-index: 100; display: none; border-top: 1px solid var(--border); }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; text-align: center; }
         .stat-item span { display: block; }
-        .stat-val { font-weight: bold; font-size: 14px; color: var(--text-main); }
-        .stat-lbl { font-size: 10px; color: var(--text-muted); }
-        .final-box { background: var(--bg-app); border-radius: 12px; padding: 10px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .final-val { font-size: 18px; font-weight: 900; color: var(--accent); }
+        .stat-val { font-weight: 900; font-size: 14px; color: var(--text-main); }
+        .stat-lbl { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+        .final-box { background: var(--bg-app); border-radius: 14px; padding: 10px 15px; margin-top: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); }
+        .final-val { font-size: 17px; font-weight: 900; color: var(--accent); }
 
         .date-select-group { display: flex; gap: 5px; direction: ltr; }
         .date-select-group select { padding: 8px 2px; font-size: 13px; direction: rtl; }
         
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); z-index: 2000; display: none; justify-content: center; align-items: center; animation: fadeIn 0.2s; }
-        .modal-box { background: var(--bg-card); padding: 25px; border-radius: 20px; width: 85%; max-width: 320px; position: relative; max-height: 80vh; overflow-y: auto; }
-        .modal-close { position: absolute; top: 15px; left: 15px; font-size: 24px; cursor: pointer; color: var(--text-muted); }
-        .help-item { margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-        .help-item:last-child { border: none; }
-        .help-title { font-weight: 900; color: var(--primary); margin-bottom: 5px; display: block; }
-        .help-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
-
-        .ch-mode-panel { display: none; }
-        .ch-mode-panel.active { display: block; }
-        .signature { text-align: center; font-size: 10px; opacity: 0.4; margin-top: 20px; margin-bottom: 10px; }
+        .ch-mode-panel { display: none; } .ch-mode-panel.active { display: block; animation: fadeIn 0.2s; }
+        .signature { text-align: center; font-size: 10px; opacity: 0.4; margin-top: 25px; margin-bottom: 5px; color: var(--text-main); }
+        
+        /* Modal */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); z-index: 2000; display: none; justify-content: center; align-items: center; animation: fadeIn 0.2s; }
+        .modal-box { background: var(--bg-card); padding: 25px; border-radius: 20px; width: 85%; max-width: 320px; text-align: center; max-height: 80vh; overflow-y: auto; box-shadow: var(--shadow); }
+        .modal-close { position: absolute; top: 15px; left: 15px; font-size: 24px; cursor: pointer; color: var(--text-muted); width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; background: var(--bg-app); border-radius: 50%; }
+        .help-item { margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; text-align: right; }
+        .help-title { font-weight: 900; color: var(--primary); margin-bottom: 6px; display: block; font-size: 14px; }
+        .help-desc { font-size: 13px; color: var(--text-muted); line-height: 1.7; text-align: justify; }
 
     </style>
 </head>
@@ -170,7 +185,7 @@
         </div>
     </div>
 
-    <div class="main-content">
+    <div class="main-content" id="mainContent">
         
         <div class="page active" id="page0">
             <div class="card">
@@ -180,26 +195,35 @@
                 </div>
                 
                 <div class="input-row">
-                    <div class="input-group" style="flex:1">
-                        <label>سود سالیانه %</label>
-                        <input type="tel" id="loanRate" value="۳.۹" oninput="fmtFa(this); calcLoan()">
+                    <div class="input-group">
+                        <label>
+                            سود %
+                            <div class="rate-badge" id="loanRateBadge" onclick="toggleRate('loan')">
+                                <span class="rate-dot"></span>
+                                <span class="rate-text">۴.۵٪</span>
+                            </div>
+                        </label>
+                        <input type="tel" id="loanRate" value="3.9" oninput="fmtFa(this); calcLoan()">
                     </div>
-                    <div class="input-group" style="flex:1">
+                    <div class="input-group">
                         <label>تعداد اقساط</label>
-                        <input type="tel" id="loanMonths" value="۴" oninput="fmtFa(this); calcLoan()">
+                        <input type="tel" id="loanMonths" value="4" oninput="fmtFa(this); calcLoan()">
                     </div>
                 </div>
 
                 <div class="chips">
-                    <div class="chip selected" onclick="setM(4, this)">۴ ماه</div>
-                    <div class="chip" onclick="setM(8, this)">۸ ماه</div>
-                    <div class="chip" onclick="setM(12, this)">۱۲ ماه</div>
-                    <div class="chip" onclick="setM(16, this)">۱۶ ماه</div>
+                    <div class="chip selected" onclick="setMLoan(4, this)">۴ ماه</div>
+                    <div class="chip" onclick="setMLoan(8, this)">۸ ماه</div>
+                    <div class="chip" onclick="setMLoan(12, this)">۱۲ ماه</div>
+                    <div class="chip" onclick="setMLoan(16, this)">۱۶ ماه</div>
                 </div>
 
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
-                    <label style="margin:0; font-size:13px;">یک ماه سود اضافه (+۱)</label>
-                    <input type="checkbox" id="loanExtra" onchange="calcLoan()" style="width:20px; height:20px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
+                    <label style="margin:0; font-size:13px; font-weight:bold; color:var(--text-main);">یک ماه سود اضافه (+۱)</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="loanExtra" onchange="calcLoan()">
+                        <span class="slider"></span>
+                    </label>
                 </div>
             </div>
 
@@ -207,9 +231,11 @@
                 <div class="res-lbl" id="loanTotal"></div>
                 <div class="res-val" id="loanMonthly"></div>
                 <div class="res-sub" id="loanInterest"></div>
-                <div style="font-size:10px; margin-top:5px; opacity:0.6;">(رُند شده به ۵۰۰۰ تومان بالا)</div>
+                <div style="font-size:10px; margin-top:5px; opacity:0.7;">(رُند شده به ۵۰۰۰ تومان بالا)</div>
+                <button class="btn-transfer" id="btnTransfer" onclick="transferToCheque()">تولید چک‌های این وام ⬅️</button>
             </div>
             
+            <button class="btn btn-primary" onclick="calcLoan()">محاسبه</button>
             <button class="btn btn-ghost" onclick="resetLoan()">پاکسازی فرم</button>
         </div>
 
@@ -220,18 +246,35 @@
                     <input type="tel" id="revAmount" placeholder="مثلاً ۵,۰۰۰,۰۰۰" oninput="fmt(this); calcRev()">
                 </div>
                 <div class="input-row">
-                    <div class="input-group" style="flex:1">
-                        <label>سود %</label>
-                        <input type="tel" id="revRate" value="۳.۹" oninput="fmtFa(this); calcRev()">
+                    <div class="input-group">
+                        <label>
+                            سود %
+                            <div class="rate-badge" id="revRateBadge" onclick="toggleRate('rev')">
+                                <span class="rate-dot"></span>
+                                <span class="rate-text">۴.۵٪</span>
+                            </div>
+                        </label>
+                        <input type="tel" id="revRate" value="3.9" oninput="fmtFa(this); calcRev()">
                     </div>
-                    <div class="input-group" style="flex:1">
+                    <div class="input-group">
                         <label>تعداد اقساط</label>
-                        <input type="tel" id="revMonths" value="۴" oninput="fmtFa(this); calcRev()">
+                        <input type="tel" id="revMonths" value="4" oninput="fmtFa(this); calcRev()">
                     </div>
                 </div>
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <label style="margin:0; font-size:13px;">سود اضافه (+۱)</label>
-                    <input type="checkbox" id="revExtra" onchange="calcRev()" style="width:20px; height:20px;">
+
+                <div class="chips">
+                    <div class="chip selected" onclick="setMRev(4, this)">۴ ماه</div>
+                    <div class="chip" onclick="setMRev(8, this)">۸ ماه</div>
+                    <div class="chip" onclick="setMRev(12, this)">۱۲ ماه</div>
+                    <div class="chip" onclick="setMRev(16, this)">۱۶ ماه</div>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
+                    <label style="margin:0; font-size:13px; font-weight:bold; color:var(--text-main);">سود اضافه (+۱)</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="revExtra" onchange="calcRev()">
+                        <span class="slider"></span>
+                    </label>
                 </div>
             </div>
 
@@ -240,18 +283,19 @@
                 <div class="res-val" id="revPrincipal"></div>
                 <div class="res-sub" id="revTotal"></div>
             </div>
+            <button class="btn btn-primary" onclick="calcRev()">محاسبه</button>
         </div>
 
         <div class="page" id="page2">
             
-            <div style="display:flex; justify-content:space-between; margin-bottom:15px; align-items:end;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:20px; align-items:end;">
                 <div style="width: 70px;">
-                    <label style="font-size:10px; color:var(--text-muted);">درصد ماهانه</label>
-                    <input type="tel" id="chRate" value="۵" oninput="fmtFa(this); calcCh()" style="padding:8px; height:35px;">
+                    <label style="font-size:11px; color:var(--text-muted); font-weight:bold; margin-bottom:5px; display:block">درصد ماهانه</label>
+                    <input type="tel" id="chRate" value="5" oninput="fmtFa(this); calcCh()" style="padding:8px; height:40px; font-size:15px;">
                 </div>
                 
                 <div style="flex:1; margin:0 10px;">
-                    <label style="font-size:10px; color:var(--text-muted); text-align:center; display:block;">تاریخ مبنا (امروز)</label>
+                    <label style="font-size:11px; color:var(--text-muted); text-align:center; display:block; font-weight:bold; margin-bottom:5px">تاریخ مبنا (امروز)</label>
                     <div class="date-select-group" style="justify-content:center;">
                         <select id="baseY" onchange="updBase()"></select>
                         <select id="baseM" onchange="updBase()"></select>
@@ -259,22 +303,23 @@
                     </div>
                 </div>
                 
-                <button class="btn-ghost" onclick="resetCh()" style="color:var(--danger);">پاکسازی</button>
+                <button class="btn-ghost" onclick="resetCh()" style="color:var(--danger); border:1px solid var(--danger); padding:8px 12px; height:40px; margin-top:20px;">پاکسازی</button>
             </div>
 
             <div class="mode-switch">
-                <div class="mode-btn active" onclick="setChMode('single')" id="btnModeSingle">ورود تکی (دستی)</div>
-                <div class="mode-btn" onclick="setChMode('batch')" id="btnModeBatch">تولید گروهی (اقساط)</div>
+                <div class="mode-btn active" onclick="setChMode('single')" id="btnModeSingle">ورود تکی</div>
+                <div class="mode-btn" onclick="setChMode('batch')" id="btnModeBatch">تولید گروهی</div>
+                <div class="mode-btn" onclick="setChMode('smart')" id="btnModeSmart">معکوس چک</div>
             </div>
 
             <div class="card">
                 <div id="panelSingle" class="ch-mode-panel active">
                     <div class="input-row">
-                        <div class="input-group" style="flex:1">
+                        <div class="input-group">
                             <label>مبلغ چک</label>
                             <input type="tel" id="chAmtS" placeholder="تومان" oninput="fmt(this)">
                         </div>
-                        <div class="input-group" style="width: 50px;">
+                        <div class="input-group" style="width: 55px; flex:none;">
                             <label>&nbsp;</label>
                             <button class="btn-add" onclick="addSingle()">+</button>
                         </div>
@@ -319,14 +364,50 @@
                     </div>
                     <button class="btn btn-primary" onclick="addBatch()">تولید لیست</button>
                 </div>
+
+                <div id="panelSmart" class="ch-mode-panel">
+                    <div class="input-row">
+                        <div class="input-group" style="flex:2">
+                            <label>مبلغ خالص مورد نیاز</label>
+                            <input type="tel" id="chNetSmart" placeholder="تومان" oninput="fmt(this)">
+                        </div>
+                        <div class="input-group" style="flex:1">
+                            <label>تعداد</label>
+                            <input type="tel" id="chCntSmart" placeholder="عدد" oninput="fmtFa(this)">
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div class="input-group" style="flex:1">
+                            <label>فاصله</label>
+                            <select id="chStepSmart" style="padding:0 5px;" onchange="updateSmartDate()">
+                                <option value="1">۱ ماهه</option>
+                                <option value="45">۴۵ روزه</option>
+                                <option value="2">۲ ماهه</option>
+                                <option value="3">۳ ماهه</option>
+                                <option value="4">۴ ماهه</option>
+                                <option value="6">۶ ماهه</option>
+                            </select>
+                        </div>
+                        <div class="input-group" style="flex:2">
+                            <label>تاریخ اولین چک</label>
+                            <div class="date-select-group">
+                                <select id="chYSmart"></select>
+                                <select id="chMSmart"></select>
+                                <select id="chDSmart"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="calcSmartRas()">محاسبه و تولید</button>
+                </div>
             </div>
 
-            <div class="card" style="padding: 10px 15px; min-height: 100px;">
-                <div style="font-size:12px; font-weight:bold; color:var(--text-muted); margin-bottom:5px;">لیست چک‌ها</div>
-                <div class="cheque-list" id="chList"></div>
+            <div class="card" style="padding: 15px; min-height: 100px;">
+                <div style="font-size:12px; font-weight:bold; color:var(--text-muted); margin-bottom:10px;">لیست چک‌ها</div>
+                <div class="cheque-list" id="chList">
+                    <div class="empty-list">هنوز چکی وارد نشده است</div>
+                </div>
             </div>
         </div>
-
     </div>
 
     <div class="fixed-footer" id="chFooter">
@@ -351,15 +432,18 @@
             <h3 style="margin-top:0; color:var(--text-main);">راهنمای استفاده</h3>
             <div class="help-item">
                 <span class="help-title">۱. اقساط وام</span>
-                <span class="help-desc">محاسبه مبلغ قسط، سود کل و جمع بازپرداخت بر اساس مبلغ وام و نرخ سود. گزینه "+۱" برای محاسبه سود یک ماه اضافه (عرف بازار) است.</span>
+                <span class="help-desc">
+                    محاسبه قسط، سود و بازپرداخت.
+                    <br><b>انتقال به چک:</b> مبلغ چک‌ها طوری تنظیم می‌شود که خالص دریافتی (با کسر سود چک) دقیقاً برابر مبلغ وام شود.
+                </span>
             </div>
-            <div class="help-item">
-                <span class="help-title">۲. معکوس</span>
-                <span class="help-desc">اگر مشتری بگوید "ماهی ۵ تومان قسط می‌دهم"، این بخش محاسبه می‌کند که چقدر جنس نقد می‌توانید به او بدهید.</span>
-            </div>
+            <div class="help-item"><span class="help-title">۲. معکوس</span>محاسبه مبلغ نقد کالا بر اساس توان پرداخت قسط مشتری.</div>
             <div class="help-item">
                 <span class="help-title">۳. رأس‌گیر چک</span>
-                <span class="help-desc">محاسبه تاریخ میانگین (رأس) برای چند چک. <br> <b>ورود تکی:</b> چک‌ها را دانه‌دانه وارد کنید. <br> <b>تولید گروهی:</b> اقساط منظم را با یک کلیک بسازید.</span>
+                <span class="help-desc">
+                    محاسبه تاریخ رأس و سود چک‌ها.
+                    <br><b>معکوس چک:</b> مبلغ خالصی که نیاز دارید را وارد کنید، برنامه مبلغ چک‌ها را حساب می‌کند.
+                </span>
             </div>
             <div class="signature">برنامه نویس: حیدر حیدری</div>
         </div>
@@ -369,35 +453,36 @@
 
 <script>
     // --- Tools ---
-    // اطمینان از عدم وجود فاصله یا کاراکتر اضافی
     const _ = id => document.getElementById(id);
     const toFa = n => (n===undefined||n===null)?'':n.toString().replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]);
     const toEn = s => s ? s.toString().replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d)).replace(/,/g,'') : '';
     const sep = n => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    
-    function fmt(el) { 
-        let valStr = toEn(el.value); 
-        let v = valStr.replace(/[^0-9]/g,''); 
-        if(!v) { el.value = ''; return; }
-        el.value = toFa(parseInt(v).toLocaleString()); 
-    }
-    
-    function fmtFa(el) { 
-        let v = toEn(el.value); 
-        el.value = v ? toFa(v) : ''; 
-    }
+    function fmt(el) { let v = toEn(el.value).replace(/[^0-9]/g,''); el.value = v ? toFa(parseInt(v).toLocaleString()) : ''; }
+    function fmtFa(el) { let v = toEn(el.value); el.value = v ? toFa(v) : ''; }
 
     // --- Init ---
-    // استفاده از DOMContentLoaded برای اجرای سریع و مطمئن
-    document.addEventListener('DOMContentLoaded', function() {
-        initDate();
-        // اطمینان از مخفی بودن نتایج در شروع
-        _('loanResult').style.display = 'none';
-        _('revResult').style.display = 'none';
-    });
+    window.addEventListener('load', () => { initDate(); setupSwipe(); });
 
-    // --- Layout & Theme ---
+    // --- Logic ---
+    function toggleRate(type) {
+        const input = _(type + 'Rate');
+        const badge = _(type + 'RateBadge');
+        const is45 = input.value == toFa(4.5);
+        
+        if (is45) {
+            input.value = toFa(3.9);
+            badge.classList.remove('active');
+        } else {
+            input.value = toFa(4.5);
+            badge.classList.add('active');
+        }
+        
+        if(type==='loan') calcLoan(); else calcRev();
+    }
+
+    let currentTab = 0;
     function setTab(idx) {
+        currentTab = idx;
         document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
         document.querySelectorAll('.page').forEach((p, i) => p.classList.toggle('active', i === idx));
         _('tabIndicator').style.transform = `translateX(${idx * -100}%)`;
@@ -405,13 +490,35 @@
         footer.style.display = (idx === 2) ? 'block' : 'none';
     }
 
+    // Swipe Feature
+    function setupSwipe() {
+        let startX = 0;
+        const content = _('mainContent');
+        content.addEventListener('touchstart', e => startX = e.changedTouches[0].screenX);
+        content.addEventListener('touchend', e => {
+            const endX = e.changedTouches[0].screenX;
+            if (endX < startX - 50 && currentTab < 2) setTab(currentTab + 1); // Swipe Left -> Next
+            if (endX > startX + 50 && currentTab > 0) setTab(currentTab - 1); // Swipe Right -> Prev
+        });
+    }
+
+    let themeIndex = 0;
+    const themes = ['', 'dark', 'year'];
+    const themeIcons = ['🌙', '☀️', '🍑'];
     function toggleTheme() {
+        themeIndex = (themeIndex + 1) % themes.length;
+        const newTheme = themes[themeIndex];
         const html = document.documentElement;
-        const isDark = html.getAttribute('data-theme') === 'dark';
-        const newTheme = isDark ? 'light' : 'dark';
-        html.setAttribute('data-theme', newTheme);
-        document.querySelector('meta[name="theme-color"]').setAttribute('content', newTheme==='dark'?'#111827':'#F3F4F6');
-        _('themeIcon').innerText = isDark ? '🌙' : '☀️';
+        
+        if(newTheme) html.setAttribute('data-theme', newTheme);
+        else html.removeAttribute('data-theme');
+        
+        _('themeIcon').innerText = themeIcons[themeIndex];
+        
+        let color = '#F3F4F6';
+        if(newTheme === 'dark') color = '#111827';
+        if(newTheme === 'year') color = '#FFBE98';
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', color);
     }
 
     function toggleHelp() {
@@ -419,205 +526,251 @@
         m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
     }
 
-    // --- Loan Logic ---
-    function setM(m, el) { 
-        _('loanMonths').value = toFa(m); 
-        document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected')); 
-        el.classList.add('selected'); 
-        calcLoan(); 
-    }
-    
+    // LOAN
+    let lastCalculatedMonthly = 0;
+    let lastPrincipal = 0;
+    function setMLoan(m, el) { _('loanMonths').value = toFa(m); _('page0').querySelectorAll('.chip').forEach(c => c.classList.remove('selected')); el.classList.add('selected'); calcLoan(); }
     function calcLoan() {
-        let p = parseFloat(toEn(_('loanAmount').value));
-        let m = parseInt(toEn(_('loanMonths').value));
-        let r = parseFloat(toEn(_('loanRate').value));
-        
-        if(!p || !m || isNaN(p) || isNaN(m)) { 
-            _('loanResult').style.display='none'; 
-            return; 
-        }
-        
+        let p = parseFloat(toEn(_('loanAmount').value)), m = parseInt(toEn(_('loanMonths').value)), r = parseFloat(toEn(_('loanRate').value));
+        if(!p || !m) { _('loanResult').style.display='none'; return; }
         let extra = _('loanExtra').checked ? 1 : 0;
-        let intM = m + extra; 
-        let interest = p * (r/100) * intM;
+        let interest = p * (r/100) * (m + extra);
         let total = p + interest;
         let monthly = Math.ceil((total / m) / 5000) * 5000;
         let finalTotal = monthly * m;
         let finalInt = finalTotal - p;
-        
+        lastCalculatedMonthly = monthly;
+        lastPrincipal = p;
         _('loanTotal').innerText = `بازپرداخت کل: ${toFa(sep(finalTotal))} تومان`;
         _('loanMonthly').innerText = `${toFa(sep(monthly))} تومان`;
         _('loanInterest').innerText = `سود خالص: ${toFa(sep(finalInt))} تومان`;
         _('loanResult').style.display='block';
     }
-    
-    function resetLoan() { 
-        _('loanAmount').value=''; 
-        _('loanResult').style.display='none'; 
-        _('loanMonths').value = toFa(4);
-    }
+    function resetLoan() { _('loanAmount').value=''; _('loanResult').style.display='none'; _('loanRate').value=toFa(3.9); _('loanRateBadge').classList.remove('active'); }
 
-    // --- Reverse Logic ---
-    function calcRev() {
-        let mont = parseFloat(toEn(_('revAmount').value));
-        let m = parseInt(toEn(_('revMonths').value));
-        let r = parseFloat(toEn(_('revRate').value));
-        
-        if(!mont || !m || isNaN(mont) || isNaN(m)) { 
-            _('revResult').style.display='none'; 
-            return; 
-        }
-        
-        let extra = _('revExtra').checked ? 1 : 0;
-        let intM = m + extra;
-        let totalPay = mont * m;
-        let factor = 1 + ((r/100) * intM);
-        let principal = Math.round(totalPay / factor);
-        
-        _('revPrincipal').innerText = `${toFa(sep(principal))} تومان`;
-        _('revTotal').innerText = `جمع بازپرداخت: ${toFa(sep(totalPay))}`;
-        _('revResult').style.display='block';
-    }
+    function transferToCheque() {
+        let principal = lastPrincipal || parseFloat(toEn(_('loanAmount').value));
+        let cnt = parseInt(toEn(_('loanMonths').value));
+        let targetRate = parseFloat(toEn(_('chRate').value)) || 5; 
 
-    // --- Cheque Logic ---
-    let cheques = [];
-    let baseDate = {};
+        if (!principal || !cnt) return alert("لطفا ابتدا محاسبه کنید");
 
-    function initDate() {
-        const fill = (ids, start, end) => { 
-            ids.forEach(id => { 
-                let h = ''; 
-                for(let i=start; i<=end; i++) h += `<option value="${i}">${toFa(i)}</option>`; 
-                let el = _(id);
-                if(el) el.innerHTML = h; 
-            }); 
-        };
+        setTab(2);
+        setChMode('batch');
         
-        fill(['baseD','chDS','chDB'], 1, 31);
-        fill(['baseM','chMS','chMB'], 1, 12);
-        fill(['baseY','chYS','chYB'], 1402, 1410);
+        let step = 1; 
+        _('chStepB').value = step;
         
-        const j = gregorianToJalali(new Date());
-        baseDate = { y: j[0], m: j[1], d: j[2] };
+        // Reverse Engineering Logic
+        let avgMonths = ((cnt + 1) / 2) * step;
+        let factor = 1 - ((targetRate / 100) * (avgMonths)); 
         
-        // تنظیم مقادیر اولیه
-        ['baseY','chYS','chYB'].forEach(id => { if(_(id)) _(id).value = j[0]; });
-        ['baseM','chMS','chMB'].forEach(id => { if(_(id)) _(id).value = j[1]; });
-        ['baseD','chDS','chDB'].forEach(id => { if(_(id)) _(id).value = j[2]; });
-        
+        if (factor <= 0) return alert("نرخ سود بسیار زیاد است");
+
+        let requiredTotal = principal / factor;
+        let singleCheck = Math.ceil((requiredTotal / cnt) / 5000) * 5000;
+
+        _('chAmtB').value = toFa(sep(singleCheck));
+        _('chCntB').value = toFa(cnt);
         updDefDateBatch();
     }
 
-    function updBase() { 
-        baseDate = { y: parseInt(_('baseY').value), m: parseInt(_('baseM').value), d: parseInt(_('baseD').value) }; 
-        calcCh(); 
+    // REVERSE
+    function setMRev(m, el) { _('revMonths').value = toFa(m); _('page1').querySelectorAll('.chip').forEach(c => c.classList.remove('selected')); el.classList.add('selected'); calcRev(); }
+    function calcRev() {
+        let mont = parseFloat(toEn(_('revAmount').value)), m = parseInt(toEn(_('revMonths').value)), r = parseFloat(toEn(_('revRate').value));
+        if(!mont || !m) { _('revResult').style.display='none'; return; }
+        let extra = _('revExtra').checked ? 1 : 0;
+        let factor = 1 + ((r/100) * (m + extra));
+        let principal = Math.round((mont * m) / factor);
+        _('revPrincipal').innerText = `${toFa(sep(principal))} تومان`;
+        _('revTotal').innerText = `جمع بازپرداخت: ${toFa(sep(mont*m))}`;
+        _('revResult').style.display='block';
     }
+
+    // CHEQUE
+    let cheques=[], baseDate={};
+    function initDate() {
+        const fill = (ids, start, end) => { ids.forEach(id => { let h=''; for(let i=start; i<=end; i++) h+=`<option value="${i}">${toFa(i)}</option>`; _(id).innerHTML=h; }); };
+        fill(['baseD','chDS','chDB','chDSmart'],1,31); 
+        fill(['baseM','chMS','chMB','chMSmart'],1,12); 
+        fill(['baseY','chYS','chYB','chYSmart'],1402,1410);
+        
+        const j = gregorianToJalali(new Date());
+        baseDate = {y:j[0], m:j[1], d:j[2]};
+        _('baseY').value=j[0]; _('baseM').value=j[1]; _('baseD').value=j[2];
+        
+        updDefDateBatch();
+        updateSmartDate();
+        _('chYS').value=j[0]; _('chMS').value=j[1]; _('chDS').value=j[2];
+    }
+    
+    function updBase() { baseDate = {y:parseInt(_('baseY').value), m:parseInt(_('baseM').value), d:parseInt(_('baseD').value)}; calcCh(); }
     
     function updDefDateBatch() {
         let step = parseInt(_('chStepB').value);
         let by = parseInt(_('baseY').value), bm = parseInt(_('baseM').value), bd = parseInt(_('baseD').value);
         let g = jalaliToGregorian(by, bm, bd);
-        let d = new Date(g.y, g.m-1, g.d); d.setMonth(d.getMonth() + step);
+        let d = new Date(g.y, g.m-1, g.d); d.setMonth(d.getMonth()+step);
         let j = gregorianToJalali(d);
-        _('chYB').value = j[0]; _('chMB').value = j[1]; _('chDB').value = j[2];
+        _('chYB').value=j[0]; _('chMB').value=j[1]; _('chDB').value=j[2];
     }
 
-    function setChMode(mode) {
-        if(mode === 'single') {
-            _('btnModeSingle').classList.add('active'); _('btnModeBatch').classList.remove('active');
-            _('panelSingle').classList.add('active'); _('panelBatch').classList.remove('active');
-        } else {
-            _('btnModeSingle').classList.remove('active'); _('btnModeBatch').classList.add('active');
-            _('panelSingle').classList.remove('active'); _('panelBatch').classList.add('active');
-        }
+    function updateSmartDate() {
+        let step = parseInt(_('chStepSmart').value);
+        if(step === 45) step = 1; 
+        let by = parseInt(_('baseY').value), bm = parseInt(_('baseM').value), bd = parseInt(_('baseD').value);
+        let g = jalaliToGregorian(by, bm, bd);
+        let d = new Date(g.y, g.m-1, g.d); 
+        
+        if(_('chStepSmart').value === "45") d.setDate(d.getDate() + 45);
+        else d.setMonth(d.getMonth() + step);
+        
+        let j = gregorianToJalali(d);
+        _('chYSmart').value=j[0]; _('chMSmart').value=j[1]; _('chDSmart').value=j[2];
+    }
+
+    function setChMode(m) {
+        _('btnModeSingle').classList.remove('active'); _('btnModeBatch').classList.remove('active'); _('btnModeSmart').classList.remove('active');
+        _('panelSingle').classList.remove('active'); _('panelBatch').classList.remove('active'); _('panelSmart').classList.remove('active');
+        
+        if(m==='single') { _('btnModeSingle').classList.add('active'); _('panelSingle').classList.add('active'); }
+        else if(m==='batch') { _('btnModeBatch').classList.add('active'); _('panelBatch').classList.add('active'); }
+        else { _('btnModeSmart').classList.add('active'); _('panelSmart').classList.add('active'); }
     }
 
     function addSingle() {
-        let amt = parseInt(toEn(_('chAmtS').value));
-        if(!amt || isNaN(amt)) return;
-        let y = parseInt(_('chYS').value), m = parseInt(_('chMS').value), d = parseInt(_('chDS').value);
-        cheques.push({ y:y, m:m, d:d, amt:amt });
-        recalcBalances(); renderCh(); _('chAmtS').value = '';
+        let amt = parseInt(toEn(_('chAmtS').value)); if(!amt) return;
+        cheques.push({ y:parseInt(_('chYS').value), m:parseInt(_('chMS').value), d:parseInt(_('chDS').value), amt:amt });
+        recalcBalances(); renderCh(); _('chAmtS').value='';
     }
 
     function addBatch() {
-        let amt = parseInt(toEn(_('chAmtB').value));
-        let cnt = parseInt(toEn(_('chCntB').value));
-        if(!amt || !cnt || isNaN(amt) || isNaN(cnt)) return;
+        let amt = parseInt(toEn(_('chAmtB').value)), cnt = parseInt(toEn(_('chCntB').value)); if(!amt||!cnt) return;
         let step = parseInt(_('chStepB').value);
-        let sy = parseInt(_('chYB').value), sm = parseInt(_('chMB').value), sd = parseInt(_('chDB').value);
+        let sy=parseInt(_('chYB').value), sm=parseInt(_('chMB').value), sd=parseInt(_('chDB').value);
         for(let i=0; i<cnt; i++) {
             let addM = i * step; let tm = sm + addM;
-            let ny = sy + Math.floor((tm-1)/12);
-            let nm = ((tm-1)%12) + 1;
+            let ny = sy + Math.floor((tm-1)/12); let nm = ((tm-1)%12) + 1;
             let nd = sd; if(nm>6 && nd==31) nd=30; if(nm==12 && nd>29) nd=29;
             cheques.push({ y:ny, m:nm, d:nd, amt:amt });
         }
         recalcBalances(); renderCh();
     }
 
-    function recalcBalances() {
-        let total = cheques.reduce((acc, c) => acc + c.amt, 0);
-        let running = total;
-        cheques.forEach(c => { c.bal = running - c.amt; running -= c.amt; });
-    }
-
-    function renderCh() {
-        let h = '';
-        cheques.forEach((c, i) => {
-            let days = diffDays(baseDate, {y:c.y, m:c.m, d:c.d});
-            h += `
-            <div class="cheque-row">
-                <div style="flex:1">
-                    <div class="c-date">${toFa(c.y)}/${toFa(c.m)}/${toFa(c.d)} <span style="font-weight:normal; font-size:11px; color:#666">(${toFa(days)} روز)</span></div>
-                    <div class="c-sub">مانده: ${toFa(sep(c.bal))}</div>
-                </div>
-                <div style="text-align:left">
-                    <div class="c-amt">${toFa(sep(c.amt))}</div>
-                    <span class="btn-del" onclick="delCh(${i})">×</span>
-                </div>
-            </div>`;
-        });
-        _('chList').innerHTML = h;
-        calcCh();
-    }
-
-    function delCh(i) { cheques.splice(i, 1); recalcBalances(); renderCh(); }
-
-    function calcCh() {
-        let tot = 0, wSum = 0;
-        cheques.forEach(c => { tot += c.amt; wSum += c.amt * diffDays(baseDate, {y:c.y, m:c.m, d:c.d}); });
-        let ras = tot>0 ? wSum/tot : 0;
+    function calcSmartRas() {
+        let net = parseInt(toEn(_('chNetSmart').value));
+        let cnt = parseInt(toEn(_('chCntSmart').value));
+        if(!net || !cnt) return;
+        
+        let intervalVal = _('chStepSmart').value;
+        let loopInterval = (intervalVal === '45') ? 2 : parseInt(intervalVal);
         let rate = parseFloat(toEn(_('chRate').value)) || 0;
-        let interest = tot * (rate/100) * (ras/30);
+
+        let sY = parseInt(_('chYSmart').value), sM = parseInt(_('chMSmart').value), sD = parseInt(_('chDSmart').value);
+        let bY = parseInt(_('baseY').value), bM = parseInt(_('baseM').value), bD = parseInt(_('baseD').value);
+        
+        let baseG = jalaliToGregorian(bY, bM, bD);
+        let baseDateObj = new Date(baseG.y, baseG.m - 1, baseG.d);
+
+        let totalFactor = 0;
+        let tempCheques = [];
+        let curY = sY, curM = sM;
+
+        for(let i=0; i<cnt; i++) {
+            let day = sD;
+            if(sD > 30 && curM > 6) day = 30;
+            if(curM === 12 && day > 29) day = 29;
+
+            let checkG = jalaliToGregorian(curY, curM, day);
+            let checkDate = new Date(checkG.y, checkG.m - 1, checkG.d);
+            
+            let diff = Math.ceil((checkDate - baseDateObj) / (1000*60*60*24));
+            if(diff <= 0) diff = 0;
+
+            let interest = (rate/100) * (diff/30);
+            let factor = 1 - interest;
+            
+            if(factor <= 0) return alert("سود بیشتر از مبلغ چک شده است!");
+            
+            totalFactor += factor;
+            
+            tempCheques.push({ y:curY, m:curM, d:day });
+
+            if (intervalVal === '45') {
+               checkDate.setDate(checkDate.getDate() + 45);
+               let nextJ = gregorianToJalali(checkDate);
+               curY = nextJ[0]; curM = nextJ[1]; day = nextJ[2]; 
+               sD = day; 
+            } else {
+                curM += loopInterval;
+                while(curM > 12) { curM -= 12; curY++; }
+            }
+        }
+
+        let checkVal = net / totalFactor;
+        checkVal = Math.ceil(checkVal / 5000) * 5000;
+
+        cheques = [];
+        tempCheques.forEach(c => {
+            cheques.push({ y:c.y, m:c.m, d:c.d, amt:checkVal });
+        });
+        recalcBalances(); renderCh();
+    }
+
+    function recalcBalances() { let total = cheques.reduce((acc,c)=>acc+c.amt,0); let running=total; cheques.forEach(c=>{c.bal=running-c.amt; running-=c.amt;}); }
+    
+    function renderCh() {
+        const list = _('chList');
+        if(cheques.length === 0) {
+            list.innerHTML = '<div class="empty-list">هنوز چکی وارد نشده است</div>';
+            _('fCnt').innerText = "۰"; _('fDays').innerText = "۰"; _('fTot').innerText = "۰";
+            _('fInt').innerText = "۰"; _('fNet').innerText = "۰"; _('fDate').innerText = "---";
+            return;
+        }
+        
+        let h='', tot=0, wSum=0;
+        cheques.forEach((c,i)=>{
+            let days = diffDays(baseDate, {y:c.y, m:c.m, d:c.d});
+            tot+=c.amt; wSum+=c.amt*days;
+            h+=`<div class="cheque-row"><div style="flex:1"><div class="c-date">${toFa(c.y)}/${toFa(c.m)}/${toFa(c.d)} <span style="font-weight:normal; font-size:11px; color:#666">(${toFa(days)} روز)</span></div><div class="c-sub">مانده: ${toFa(sep(c.bal))}</div></div><div style="text-align:left"><div class="c-amt">${toFa(sep(c.amt))}</div><span class="btn-del" onclick="delCh(${i})">×</span></div></div>`;
+        });
+        list.innerHTML=h;
+        
+        let ras = tot>0 ? wSum/tot : 0;
+        let r = parseFloat(toEn(_('chRate').value))||0;
+        let interest = tot * (r/100) * (ras/30);
         let rdStr = "---";
-        if(tot > 0) {
+        
+        if(tot > 0){
             let g = jalaliToGregorian(baseDate.y, baseDate.m, baseDate.d);
             let t = new Date(g.y, g.m-1, g.d); t.setDate(t.getDate() + Math.round(ras));
             let j = gregorianToJalali(t);
             rdStr = `${toFa(j[0])}/${toFa(j[1])}/${toFa(j[2])}`;
         }
-        _('fCnt').innerText = toFa(cheques.length);
-        _('fDays').innerText = toFa(Math.round(ras));
-        _('fTot').innerText = toFa(sep(tot));
-        _('fInt').innerText = toFa(sep(Math.round(interest)));
-        _('fNet').innerText = toFa(sep(Math.round(tot - interest)));
-        _('fDate').innerText = rdStr;
+        
+        _('fCnt').innerText=toFa(cheques.length); 
+        _('fDays').innerText=toFa(Math.round(ras)); 
+        _('fTot').innerText=toFa(sep(tot));
+        _('fInt').innerText=toFa(sep(Math.round(interest))); // FIXED ID
+        _('fNet').innerText=toFa(sep(Math.round(tot-interest))); // FIXED ID
+        _('fDate').innerText=rdStr;
     }
 
-    function resetCh() { cheques=[]; renderCh(); updDefDateBatch(); _('chAmtB').value=''; _('chCntB').value=''; _('chAmtS').value=''; }
+    function delCh(i) { cheques.splice(i,1); recalcBalances(); renderCh(); }
+    
+    function resetCh() { 
+        cheques=[]; 
+        _('chAmtB').value=''; _('chCntB').value=''; _('chAmtS').value=''; 
+        _('chNetSmart').value=''; _('chCntSmart').value='';
+        renderCh(); 
+    }
+    
+    function calcCh(){ renderCh(); } 
 
-    function jalaliToGregorian(j_y, j_m, j_d) {
-        j_y=parseInt(j_y); j_m=parseInt(j_m); j_d=parseInt(j_d); var jy=j_y-979; var jm=j_m-1; var jd=j_d-1; var j_day_no=365*jy+parseInt(jy/33)*8+parseInt((jy%33+3)/4); for(var i=0;i<jm;++i)j_day_no+=(i<6)?31:30; j_day_no+=jd; var g_day_no=j_day_no+79; var gy=1600+400*parseInt(g_day_no/146097); g_day_no=g_day_no%146097; var leap=true; if(g_day_no>=36525){g_day_no--; gy+=100*parseInt(g_day_no/36524); g_day_no=g_day_no%36524; if(g_day_no>=365)g_day_no++; else leap=false;} gy+=4*parseInt(g_day_no/1461); g_day_no%=1461; if(g_day_no>=366){leap=false; g_day_no--; gy+=parseInt(g_day_no/365); g_day_no=g_day_no%365;} for(var i=0;g_day_no>=365+(i==1&&leap);i++){g_day_no-=365+(i==1&&leap); gy++;} var gm=0; var gd=0; var gm_days=[31,(leap?29:28),31,30,31,30,31,31,30,31,30,31]; for(var i=0;i<12;i++){if(g_day_no<gm_days[i]){gm=i+1; gd=g_day_no+1; break;}g_day_no-=gm_days[i];} return {y:gy, m:gm, d:gd};
-    }
-    function gregorianToJalali(d) {
-        let g_y=d.getFullYear(), g_m=d.getMonth()+1, g_d=d.getDate(); var g_days_in_month=[31,28,31,30,31,30,31,31,30,31,30,31]; if((g_y%4==0&&g_y%100!=0)||(g_y%400==0))g_days_in_month[1]=29; var gy=g_y-1600; var gm=g_m-1; var gd=g_d-1; var g_day_no=365*gy+parseInt((gy+3)/4)-parseInt((gy+99)/100)+parseInt((gy+399)/400); for(var i=0;i<gm;++i)g_day_no+=g_days_in_month[i]; g_day_no+=gd; var j_day_no=g_day_no-79; var j_np=parseInt(j_day_no/12053); j_day_no=j_day_no%12053; var jy=979+33*j_np+4*parseInt(j_day_no/1461); j_day_no%=1461; if(j_day_no>=366){jy+=parseInt((j_day_no-1)/365); j_day_no=(j_day_no-1)%365;} var jm=0; var jd=0; for(var i=0;i<11&&j_day_no>=(i<6?31:30);++i){j_day_no-=(i<6?31:30); jm++;} jm++; jd=j_day_no+1; return [jy,jm,jd];
-    }
-    function diffDays(j1, j2) {
-        let g1 = jalaliToGregorian(j1.y, j1.m, j1.d); let g2 = jalaliToGregorian(j2.y, j2.m, j2.d);
-        let d1 = new Date(g1.y, g1.m-1, g1.d); let d2 = new Date(g2.y, g2.m-1, g2.d);
-        return Math.ceil((d2 - d1) / (1000 * 60 * 60 * 24));
-    }
+    function jalaliToGregorian(j_y, j_m, j_d) { j_y=parseInt(j_y); j_m=parseInt(j_m); j_d=parseInt(j_d); var jy=j_y-979; var jm=j_m-1; var jd=j_d-1; var j_day_no=365*jy+parseInt(jy/33)*8+parseInt((jy%33+3)/4); for(var i=0;i<jm;++i)j_day_no+=(i<6)?31:30; j_day_no+=jd; var g_day_no=j_day_no+79; var gy=1600+400*parseInt(g_day_no/146097); g_day_no=g_day_no%146097; var leap=true; if(g_day_no>=36525){g_day_no--; gy+=100*parseInt(g_day_no/36524); g_day_no=g_day_no%36524; if(g_day_no>=365)g_day_no++; else leap=false;} gy+=4*parseInt(g_day_no/1461); g_day_no%=1461; if(g_day_no>=366){leap=false; g_day_no--; gy+=parseInt(g_day_no/365); g_day_no=g_day_no%365;} for(var i=0;g_day_no>=365+(i==1&&leap);i++){g_day_no-=365+(i==1&&leap); gy++;} var gm=0; var gd=0; var gm_days=[31,(leap?29:28),31,30,31,30,31,31,30,31,30,31]; for(var i=0;i<12;i++){if(g_day_no<gm_days[i]){gm=i+1; gd=g_day_no+1; break;}g_day_no-=gm_days[i];} return {y:gy, m:gm, d:gd}; }
+    function gregorianToJalali(d) { let g_y=d.getFullYear(), g_m=d.getMonth()+1, g_d=d.getDate(); var g_days_in_month=[31,28,31,30,31,30,31,31,30,31,30,31]; if((g_y%4==0&&g_y%100!=0)||(g_y%400==0))g_days_in_month[1]=29; var gy=g_y-1600; var gm=g_m-1; var gd=g_d-1; var g_day_no=365*gy+parseInt((gy+3)/4)-parseInt((gy+99)/100)+parseInt((gy+399)/400); for(var i=0;i<gm;++i)g_day_no+=g_days_in_month[i]; g_day_no+=gd; var j_day_no=g_day_no-79; var j_np=parseInt(j_day_no/12053); j_day_no=j_day_no%12053; var jy=979+33*j_np+4*parseInt(j_day_no/1461); j_day_no%=1461; if(j_day_no>=366){jy+=parseInt((j_day_no-1)/365); j_day_no=(j_day_no-1)%365;} var jm=0; var jd=0; for(var i=0;i<11&&j_day_no>=(i<6?31:30);++i){j_day_no-=(i<6?31:30); jm++;} jm++; jd=j_day_no+1; return [jy,jm,jd]; }
+    function diffDays(j1, j2) { let g1=jalaliToGregorian(j1.y,j1.m,j1.d); let g2=jalaliToGregorian(j2.y,j2.m,j2.d); let d1=new Date(g1.y,g1.m-1,g1.d); let d2=new Date(g2.y,g2.m-1,g2.d); return Math.ceil((d2-d1)/(1000*60*60*24)); }
 </script>
 </body>
 </html>
