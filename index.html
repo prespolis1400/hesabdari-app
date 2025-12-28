@@ -14,90 +14,139 @@
     <style>
         :root {
             /* Light Theme */
-            --primary: #00695C; --primary-light: #B2DFDB; --bg-app: #F3F4F6;
-            --bg-card: #FFFFFF; --text-main: #1F2937; --text-muted: #6B7280;
-            --border: #E5E7EB; --accent: #F59E0B; --danger: #EF4444;
-            --active-toggle: #00695C; /* رنگ دکمه روشن */
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); --radius: 18px;
+            --primary: #00695C; --primary-light: #B2DFDB; --bg-app: #E0F2F1;
+            --bg-card: rgba(255, 255, 255, 0.9); /* شیشه‌ای */
+            --text-main: #1F2937; --text-muted: #546E7A;
+            --border: #CFD8DC; --accent: #F59E0B; --danger: #EF4444;
+            --active-toggle: #00695C;
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1); --radius: 20px;
+            --gradient-1: #E0F2F1; --gradient-2: #B2DFDB; --gradient-3: #FFFFFF;
         }
 
         [data-theme="dark"] {
-            --primary: #80CBC4; --primary-light: #004D40; --bg-app: #111827;
-            --bg-card: #1F2937; --text-main: #F9FAFB; --text-muted: #9CA3AF; --border: #374151;
+            --primary: #80CBC4; --primary-light: #004D40; --bg-app: #102027;
+            --bg-card: rgba(30, 41, 59, 0.9);
+            --text-main: #ECEFF1; --text-muted: #B0BEC5; --border: #37474F;
             --active-toggle: #80CBC4;
-            --shadow: none;
+            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            --gradient-1: #0f172a; --gradient-2: #1e293b; --gradient-3: #000000;
         }
 
         [data-theme="year"] {
             /* Peach Fuzz Theme */
-            --primary: #FF8A65; /* Vivid Peach */
-            --primary-light: #FFCCBC; 
-            --bg-app: #FFF3E0;
-            --bg-card: #FFFFFF;
-            --text-main: #4E342E; 
-            --text-muted: #8D6E63;
-            --border: #FFAB91;
-            --accent: #FF7043;
-            --danger: #D32F2F;
-            --active-toggle: #00897B; /* Teal for high contrast toggle */
-            --shadow: 0 8px 20px -5px rgba(255, 138, 101, 0.25);
+            --primary: #FF8A65; --primary-light: #FFCCBC; --bg-app: #FFF3E0;
+            --bg-card: rgba(255, 255, 255, 0.9);
+            --text-main: #4E342E; --text-muted: #8D6E63;
+            --border: #FFAB91; --accent: #FF7043; --danger: #D32F2F;
+            --active-toggle: #FF7043;
+            --shadow: 0 8px 32px 0 rgba(255, 112, 67, 0.15);
+            --gradient-1: #FFF3E0; --gradient-2: #FFCCBC; --gradient-3: #FFAB91;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        body { font-family: 'Vazirmatn', sans-serif; background-color: var(--bg-app); color: var(--text-main); margin: 0; padding: 0; height: 100dvh; display: flex; justify-content: center; overflow: hidden; transition: background 0.4s; }
+        
+        /* Animated Background */
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            margin: 0; padding: 0; height: 100dvh;
+            display: flex; justify-content: center; overflow: hidden;
+            color: var(--text-main);
+            
+            /* جادوی انیمیشن */
+            background: linear-gradient(-45deg, var(--gradient-1), var(--gradient-2), var(--gradient-3), var(--gradient-1));
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            transition: color 0.4s;
+        }
 
-        .app-container { width: 100%; height: 100%; max-width: 450px; background-color: var(--bg-app); display: flex; flex-direction: column; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
-        
-        /* Header */
-        .header { padding: 15px 20px; background: var(--bg-app); z-index: 10; transition: 0.3s; }
-        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .header-title { font-size: 19px; font-weight: 900; color: var(--primary); margin: 0; }
-        .vip-badge { background: gold; color: #000; font-size: 10px; font-weight: 900; padding: 2px 8px; border-radius: 20px; display: none; }
-        .header-actions { display: flex; gap: 10px; }
-        .icon-btn { background: var(--bg-card); color: var(--text-muted); border: 1px solid var(--border); border-radius: 12px; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-size: 18px; box-shadow: var(--shadow); }
-        
-        /* Tabs */
-        .tab-container { background: var(--bg-card); border-radius: 14px; padding: 5px; display: flex; position: relative; box-shadow: var(--shadow); }
-        .tab-btn { flex: 1; text-align: center; padding: 10px 0; font-size: 13px; font-weight: bold; color: var(--text-muted); cursor: pointer; z-index: 2; transition: color 0.3s; border-radius: 10px; }
-        .tab-btn.active { color: var(--primary); }
-        .tab-bg { position: absolute; top: 5px; bottom: 5px; right: 5px; width: calc(33.33% - 6px); background: var(--primary-light); border-radius: 10px; opacity: 0.3; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1; }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-        /* Content */
-        .main-content { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 180px; scroll-behavior: smooth; touch-action: pan-y; /* Allow vertical scroll but capture horizontal for swipe manually if needed */ }
-        .page { display: none; animation: fadeIn 0.3s; }
-        .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Cards & Inputs */
-        .card { background: var(--bg-card); border-radius: var(--radius); padding: 20px; margin-bottom: 15px; box-shadow: var(--shadow); border: 1px solid var(--border); transition: 0.3s; }
-        
-        .input-group { flex: 1; display: flex; flex-direction: column; } /* Changed for alignment */
-        
-        .input-group label { 
-            display: flex; justify-content: space-between; align-items: center; 
-            font-size: 12px; font-weight: bold; color: var(--text-muted); 
-            margin-bottom: 8px; min-height: 24px; /* Fixed height for alignment */
+        .app-container {
+            width: 100%; height: 100%; max-width: 450px;
+            /* پس زمینه کانتینر شفاف باشد تا انیمیشن بادی دیده شود */
+            background-color: transparent; 
+            display: flex; flex-direction: column; position: relative;
+            backdrop-filter: blur(5px); /* افکت تار شدن ملایم */
         }
         
+        /* Header */
+        .header { padding: 15px 20px; background: rgba(255,255,255,0.0); z-index: 10; transition: 0.3s; } /* هدر کاملا شفاف */
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .header-title { font-size: 20px; font-weight: 900; color: var(--primary); margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .header-actions { display: flex; gap: 10px; }
+        
+        /* Glassmorphism Buttons */
+        .icon-btn { 
+            background: var(--bg-card); 
+            color: var(--text-muted); border: 1px solid var(--border); 
+            border-radius: 12px; width: 38px; height: 38px; 
+            display: flex; align-items: center; justify-content: center; 
+            cursor: pointer; transition: 0.2s; font-size: 18px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            backdrop-filter: blur(4px);
+        }
+        
+        /* Tabs */
+        .tab-container { 
+            background: var(--bg-card); 
+            border-radius: 16px; padding: 5px; display: flex; position: relative; 
+            box-shadow: var(--shadow); 
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+        .tab-btn { flex: 1; text-align: center; padding: 10px 0; font-size: 13px; font-weight: bold; color: var(--text-muted); cursor: pointer; z-index: 2; transition: color 0.3s; border-radius: 10px; }
+        .tab-btn.active { color: var(--primary); }
+        .tab-bg { position: absolute; top: 5px; bottom: 5px; right: 5px; width: calc(33.33% - 6px); background: var(--primary-light); border-radius: 12px; opacity: 0.4; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1; }
+
+        /* Content */
+        .main-content { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 180px; scroll-behavior: smooth; }
+        .main-content::-webkit-scrollbar { width: 0; }
+        .page { display: none; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .page.active { display: block; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Cards - Glassmorphism Style */
+        .card { 
+            background: var(--bg-card); 
+            border-radius: var(--radius); padding: 22px; margin-bottom: 18px; 
+            box-shadow: var(--shadow); border: 1px solid var(--border); 
+            transition: 0.3s; backdrop-filter: blur(12px);
+        }
+        
+        .input-group { flex: 1; display: flex; flex-direction: column; }
+        .input-group label { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: bold; color: var(--text-muted); margin-bottom: 8px; min-height: 24px; }
         .input-row { display: flex; gap: 12px; margin-bottom: 15px; }
         
-        input, select { width: 100%; padding: 12px; background: var(--bg-app); border: 1px solid transparent; border-radius: 12px; font-family: 'Vazirmatn'; font-size: 16px; color: var(--text-main); text-align: center; height: 48px; transition: 0.2s; font-weight: bold; }
-        input:focus, select:focus { background: var(--bg-card); border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
+        input, select { 
+            width: 100%; padding: 12px; 
+            background: rgba(255,255,255,0.5); /* نیمه شفاف */
+            border: 1px solid var(--border); border-radius: 14px; 
+            font-family: 'Vazirmatn'; font-size: 17px; color: var(--text-main); 
+            text-align: center; height: 50px; transition: 0.2s; font-weight: bold; 
+        }
+        [data-theme="dark"] input, [data-theme="dark"] select { background: rgba(0,0,0,0.2); }
+        
+        input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); transform: translateY(-1px); }
 
         /* Buttons */
-        .btn { width: 100%; padding: 14px; border-radius: 14px; border: none; font-family: 'Vazirmatn'; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;}
-        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .btn-primary:active { transform: scale(0.98); }
-        .btn-ghost { background: transparent; color: var(--text-muted); font-size: 12px; padding: 8px; margin-top: 5px; width: auto; border-radius: 8px; }
-        .btn-ghost:active { background: rgba(0,0,0,0.05); }
-        .btn-add { background: var(--accent); color: white; margin-top: 0; height: 48px; width: 48px; border-radius: 12px; font-size: 24px; padding: 0; border:none; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        .btn-transfer { background: var(--bg-card); color: var(--primary); border: 1.5px solid var(--primary); border-radius: 12px; padding: 10px; font-size: 13px; font-weight: bold; margin-top: 15px; cursor: pointer; width: 100%; transition:0.2s; }
-        .btn-transfer:active { background: var(--primary-light); }
-
+        .btn { width: 100%; padding: 15px; border-radius: 14px; border: none; font-family: 'Vazirmatn'; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;}
+        .btn-primary { 
+            background: linear-gradient(135deg, var(--primary), var(--active-toggle)); 
+            color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.15); 
+        }
+        .btn-primary:active { transform: scale(0.97); }
+        .btn-ghost { background: transparent; color: var(--text-muted); font-size: 12px; padding: 8px; margin-top: 5px; width: auto; border-radius: 8px; border: 1px dashed var(--border); }
+        .btn-add { background: var(--accent); color: white; margin-top: 0; height: 50px; width: 50px; border-radius: 14px; font-size: 26px; padding: 0; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .btn-transfer { background: rgba(255,255,255,0.5); color: var(--primary); border: 2px solid var(--primary); border-radius: 12px; padding: 10px 15px; font-size: 13px; font-weight: bold; margin-top: 15px; cursor: pointer; width: 100%; transition:0.2s; }
+        
         /* Switches & Rate Badge */
         .rate-badge {
             display: inline-flex; align-items: center; gap: 5px;
-            background: var(--bg-app); border: 1px solid var(--border);
+            background: var(--primary-light); border: 1px solid var(--border);
             padding: 3px 8px; border-radius: 8px; cursor: pointer;
             transition: 0.3s;
         }
@@ -113,24 +162,20 @@
         input:checked + .slider { background-color: var(--active-toggle); }
         html[dir="rtl"] input:checked + .slider:before { transform: translateX(16px); }
 
-        /* Chips */
         .chips { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 15px 0; }
-        .chip { background: var(--bg-app); padding: 10px 0; border-radius: 10px; font-size: 12px; text-align: center; color: var(--text-muted); cursor: pointer; border: 1px solid transparent; transition: 0.2s; font-weight: 600; }
-        .chip.selected { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 3px 8px rgba(0,0,0,0.15); transform: translateY(-1px); }
+        .chip { background: rgba(255,255,255,0.5); padding: 10px 0; border-radius: 12px; font-size: 13px; text-align: center; color: var(--text-muted); cursor: pointer; border: 1px solid var(--border); transition: 0.2s; font-weight: 600; }
+        .chip.selected { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.15); transform: translateY(-2px); }
 
-        /* Mode Switch */
-        .mode-switch { display: flex; background: var(--bg-app); padding: 4px; border-radius: 12px; margin-bottom: 15px; border: 1px solid var(--border); }
-        .mode-btn { flex: 1; padding: 8px; text-align: center; font-size: 12px; cursor: pointer; border-radius: 9px; color: var(--text-muted); transition: 0.3s; font-weight: bold; }
+        .mode-switch { display: flex; background: rgba(255,255,255,0.5); padding: 4px; border-radius: 14px; margin-bottom: 15px; border: 1px solid var(--border); }
+        .mode-btn { flex: 1; padding: 8px; text-align: center; font-size: 12px; cursor: pointer; border-radius: 10px; color: var(--text-muted); transition: 0.3s; font-weight: bold; }
         .mode-btn.active { background: var(--bg-card); color: var(--primary); box-shadow: var(--shadow); }
 
-        /* Result Panel */
-        .result-panel { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; text-align: center; display: none; margin-top: 15px; border-radius: 18px; padding: 20px; box-shadow: 0 8px 20px -5px rgba(0,0,0,0.2); position: relative; overflow: hidden; }
+        .result-panel { background: linear-gradient(135deg, var(--primary), var(--active-toggle)); color: white; text-align: center; display: none; margin-top: 15px; border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px -5px rgba(0,0,0,0.25); position: relative; overflow: hidden; }
         .result-panel::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0) 60%); pointer-events: none; }
         .res-val { font-size: 26px; font-weight: 900; margin: 8px 0; letter-spacing: -1px; text-shadow: 0 2px 4px rgba(0,0,0,0.1); position: relative; }
         .res-lbl { font-size: 12px; opacity: 0.95; position: relative; }
         .res-sub { border-top: 1px dashed rgba(255,255,255,0.3); margin-top: 12px; padding-top: 12px; font-size: 13px; position: relative; }
 
-        /* Cheque List */
         .cheque-list { margin-top: 10px; }
         .cheque-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); animation: slideIn 0.2s; }
         @keyframes slideIn { from { opacity: 0; transform: translateX(5px); } to { opacity: 1; transform: translateX(0); } }
@@ -139,28 +184,27 @@
         .btn-del { color: var(--danger); font-size: 20px; cursor: pointer; padding: 2px 8px; background: rgba(239, 68, 68, 0.08); border-radius: 6px; }
         .empty-list { text-align: center; padding: 25px; color: var(--text-muted); font-size: 13px; opacity: 0.6; }
 
-        /* Footer */
-        .fixed-footer { position: absolute; bottom: 0; left: 0; right: 0; background: var(--bg-card); padding: 15px 20px 25px 20px; border-radius: 24px 24px 0 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.06); z-index: 100; display: none; border-top: 1px solid var(--border); }
+        .fixed-footer { position: absolute; bottom: 0; left: 0; right: 0; background: var(--bg-card); padding: 15px 20px 25px 20px; border-radius: 24px 24px 0 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.06); z-index: 100; display: none; border-top: 1px solid var(--border); backdrop-filter: blur(15px); }
         .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; text-align: center; }
         .stat-item span { display: block; }
         .stat-val { font-weight: 900; font-size: 14px; color: var(--text-main); }
         .stat-lbl { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
-        .final-box { background: var(--bg-app); border-radius: 14px; padding: 10px 15px; margin-top: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); }
+        .final-box { background: rgba(255,255,255,0.3); border-radius: 14px; padding: 10px 15px; margin-top: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); }
         .final-val { font-size: 17px; font-weight: 900; color: var(--accent); }
 
         .date-select-group { display: flex; gap: 5px; direction: ltr; }
         .date-select-group select { padding: 8px 2px; font-size: 13px; direction: rtl; }
         
         .ch-mode-panel { display: none; } .ch-mode-panel.active { display: block; animation: fadeIn 0.2s; }
-        .signature { text-align: center; font-size: 10px; opacity: 0.4; margin-top: 25px; margin-bottom: 5px; color: var(--text-main); }
         
         /* Modal */
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); z-index: 2000; display: none; justify-content: center; align-items: center; animation: fadeIn 0.2s; }
-        .modal-box { background: var(--bg-card); padding: 25px; border-radius: 20px; width: 85%; max-width: 320px; text-align: center; max-height: 80vh; overflow-y: auto; box-shadow: var(--shadow); }
-        .modal-close { position: absolute; top: 15px; left: 15px; font-size: 24px; cursor: pointer; color: var(--text-muted); width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; background: var(--bg-app); border-radius: 50%; }
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); z-index: 2000; display: none; justify-content: center; align-items: center; animation: fadeIn 0.2s; }
+        .modal-box { background: var(--bg-card); padding: 25px; border-radius: 24px; width: 85%; max-width: 320px; text-align: center; max-height: 80vh; overflow-y: auto; box-shadow: var(--shadow); }
+        .modal-close { position: absolute; top: 15px; left: 15px; font-size: 24px; cursor: pointer; color: var(--text-muted); width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.05); border-radius: 50%; }
         .help-item { margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; text-align: right; }
         .help-title { font-weight: 900; color: var(--primary); margin-bottom: 6px; display: block; font-size: 14px; }
         .help-desc { font-size: 13px; color: var(--text-muted); line-height: 1.7; text-align: justify; }
+        .signature { text-align: center; font-size: 10px; opacity: 0.4; margin-top: 25px; margin-bottom: 5px; color: var(--text-main); }
 
     </style>
 </head>
@@ -174,7 +218,10 @@
                 <div class="icon-btn" onclick="toggleHelp()">?</div>
                 <div class="icon-btn" onclick="toggleTheme()" id="themeIcon">🌙</div>
             </div>
-            <h1 class="header-title">جعبه ابزار مالی</h1>
+            <div style="display:flex; align-items:center; gap:5px;">
+                <div class="vip-badge" id="vipBadge">VIP</div>
+                <h1 class="header-title">جعبه ابزار مالی</h1>
+            </div>
         </div>
 
         <div class="tab-container" id="tabContainer">
@@ -203,11 +250,11 @@
                                 <span class="rate-text">۴.۵٪</span>
                             </div>
                         </label>
-                        <input type="tel" id="loanRate" value="3.9" oninput="fmtFa(this); calcLoan()">
+                        <input type="tel" id="loanRate" value="۳.۹" oninput="fmtFa(this); calcLoan()">
                     </div>
                     <div class="input-group">
                         <label>تعداد اقساط</label>
-                        <input type="tel" id="loanMonths" value="4" oninput="fmtFa(this); calcLoan()">
+                        <input type="tel" id="loanMonths" value="۴" oninput="fmtFa(this); calcLoan()">
                     </div>
                 </div>
 
@@ -254,11 +301,11 @@
                                 <span class="rate-text">۴.۵٪</span>
                             </div>
                         </label>
-                        <input type="tel" id="revRate" value="3.9" oninput="fmtFa(this); calcRev()">
+                        <input type="tel" id="revRate" value="۳.۹" oninput="fmtFa(this); calcRev()">
                     </div>
                     <div class="input-group">
                         <label>تعداد اقساط</label>
-                        <input type="tel" id="revMonths" value="4" oninput="fmtFa(this); calcRev()">
+                        <input type="tel" id="revMonths" value="۴" oninput="fmtFa(this); calcRev()">
                     </div>
                 </div>
 
@@ -291,10 +338,10 @@
             <div style="display:flex; justify-content:space-between; margin-bottom:20px; align-items:end;">
                 <div style="width: 70px;">
                     <label style="font-size:11px; color:var(--text-muted); font-weight:bold; margin-bottom:5px; display:block">درصد ماهانه</label>
-                    <input type="tel" id="chRate" value="5" oninput="fmtFa(this); calcCh()" style="padding:8px; height:40px; font-size:15px;">
+                    <input type="tel" id="chRate" value="۵" oninput="fmtFa(this); calcCh()" style="padding:8px; height:40px; font-size:15px;">
                 </div>
                 
-                <div style="flex:1; margin:0 10px;">
+                <div style="flex:1; margin:0 12px;">
                     <label style="font-size:11px; color:var(--text-muted); text-align:center; display:block; font-weight:bold; margin-bottom:5px">تاریخ مبنا (امروز)</label>
                     <div class="date-select-group" style="justify-content:center;">
                         <select id="baseY" onchange="updBase()"></select>
@@ -372,7 +419,7 @@
                             <input type="tel" id="chNetSmart" placeholder="تومان" oninput="fmt(this)">
                         </div>
                         <div class="input-group" style="flex:1">
-                            <label>تعداد</label>
+                            <label>تعداد چک</label>
                             <input type="tel" id="chCntSmart" placeholder="عدد" oninput="fmtFa(this)">
                         </div>
                     </div>
@@ -426,14 +473,26 @@
         </div>
     </div>
 
+    <div id="vipModal" class="modal" onclick="if(event.target===this)this.style.display='none'">
+        <div class="modal-box">
+            <span class="vip-icon">👑</span>
+            <h3 style="margin:0; margin-bottom:10px;">فعال‌سازی VIP</h3>
+            <p style="font-size:13px; color:var(--text-muted);">برای استفاده نامحدود، شناسه زیر را برای پشتیبانی ارسال کنید:</p>
+            <div class="vip-id-box" id="deviceIdBox">---</div>
+            <p style="font-size:11px; margin-bottom:15px; color:var(--text-muted);">پس از پرداخت، برنامه را مجدداً باز کنید.</p>
+            <button class="btn-vip" onclick="location.reload()">بروزرسانی وضعیت</button>
+        </div>
+    </div>
+
     <div id="helpModal" class="modal" onclick="if(event.target===this)toggleHelp()">
         <div class="modal-box">
             <div class="modal-close" onclick="toggleHelp()">×</div>
-            <h3 style="margin-top:0; color:var(--text-main);">راهنمای استفاده</h3>
+            <h3>راهنمای استفاده</h3>
             <div class="help-item">
                 <span class="help-title">۱. اقساط وام</span>
                 <span class="help-desc">
                     محاسبه قسط، سود و بازپرداخت.
+                    <br><b>گزینه ۴.۵٪:</b> محاسبه سریع با نرخ سود بازار.
                     <br><b>انتقال به چک:</b> مبلغ چک‌ها طوری تنظیم می‌شود که خالص دریافتی (با کسر سود چک) دقیقاً برابر مبلغ وام شود.
                 </span>
             </div>
@@ -442,6 +501,7 @@
                 <span class="help-title">۳. رأس‌گیر چک</span>
                 <span class="help-desc">
                     محاسبه تاریخ رأس و سود چک‌ها.
+                    <br><b>ورود تکی:</b> برای چک‌های نامنظم.
                     <br><b>معکوس چک:</b> مبلغ خالصی که نیاز دارید را وارد کنید، برنامه مبلغ چک‌ها را حساب می‌کند.
                 </span>
             </div>
@@ -452,7 +512,9 @@
 </div>
 
 <script>
-    // --- Tools ---
+    // تنظیمات گوگل شیت (لینک اسکریپت را اینجا بگذارید)
+    const SCRIPT_URL = "URL_GOOGLE_SCRIPT_SHOMA"; 
+
     const _ = id => document.getElementById(id);
     const toFa = n => (n===undefined||n===null)?'':n.toString().replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]);
     const toEn = s => s ? s.toString().replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d)).replace(/,/g,'') : '';
@@ -460,7 +522,12 @@
     function fmt(el) { let v = toEn(el.value).replace(/[^0-9]/g,''); el.value = v ? toFa(parseInt(v).toLocaleString()) : ''; }
     function fmtFa(el) { let v = toEn(el.value); el.value = v ? toFa(v) : ''; }
 
-    // --- Init ---
+    // --- VIP & Security ---
+    let deviceId = localStorage.getItem('did') || 'U' + Math.floor(Math.random() * 9000000);
+    localStorage.setItem('did', deviceId);
+    let userStatus = { status: "Free", loan: 0, ras: 0 };
+    const LIMITS = { loan: 5, ras: 1 };
+
     window.addEventListener('load', () => { initDate(); setupSwipe(); });
 
     // --- Logic ---
@@ -517,7 +584,7 @@
         
         let color = '#F3F4F6';
         if(newTheme === 'dark') color = '#111827';
-        if(newTheme === 'year') color = '#FFBE98';
+        if(newTheme === 'year') color = '#FFF3E0';
         document.querySelector('meta[name="theme-color"]').setAttribute('content', color);
     }
 
@@ -752,8 +819,8 @@
         _('fCnt').innerText=toFa(cheques.length); 
         _('fDays').innerText=toFa(Math.round(ras)); 
         _('fTot').innerText=toFa(sep(tot));
-        _('fInt').innerText=toFa(sep(Math.round(interest))); // FIXED ID
-        _('fNet').innerText=toFa(sep(Math.round(tot-interest))); // FIXED ID
+        _('fInt').innerText=toFa(sep(Math.round(interest))); 
+        _('fNet').innerText=toFa(sep(Math.round(tot-interest))); 
         _('fDate').innerText=rdStr;
     }
 
