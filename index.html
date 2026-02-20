@@ -10,6 +10,9 @@
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.jsdelivr.net/npm/jalaali-js/dist/jalaali.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jalaali-js/dist/jalaali-js.min.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     
     <style>
         :root {
@@ -33,7 +36,6 @@
         }
 
         [data-theme="year"] {
-            /* Peach Fuzz Theme */
             --primary: #FF8A65; --primary-light: #FFCCBC; --bg-app: #FFF3E0;
             --bg-card: rgba(255, 255, 255, 0.9);
             --text-main: #4E342E; --text-muted: #8D6E63;
@@ -46,114 +48,77 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
         
         body {
-            font-family: 'Vazirmatn', sans-serif;
-            margin: 0; padding: 0; height: 100dvh;
-            display: flex; justify-content: center; overflow: hidden;
-            color: var(--text-main);
+            font-family: 'Vazirmatn', sans-serif; margin: 0; padding: 0; height: 100dvh;
+            display: flex; justify-content: center; overflow: hidden; color: var(--text-main);
             background: linear-gradient(125deg, var(--g1), var(--g2), var(--g3), var(--g1));
-            background-size: 300% 300%;
-            animation: flowWave 12s ease-in-out infinite;
-            transition: color 0.4s;
+            background-size: 300% 300%; animation: flowWave 12s ease-in-out infinite; transition: color 0.4s;
         }
 
-        @keyframes flowWave {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        @keyframes flowWave { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        /* Login Screen */
+        .login-screen {
+            position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; padding: 20px; 
+            backdrop-filter: blur(10px); background: linear-gradient(125deg, var(--g1), var(--g2));
+        }
+        .login-card {
+            background: var(--bg-card); border-radius: 24px; padding: 30px 20px;
+            width: 100%; max-width: 320px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            border: 1px solid var(--border);
         }
 
         .app-container {
-            width: 100%; height: 100%; max-width: 450px;
-            background-color: transparent; 
-            display: flex; flex-direction: column; position: relative;
-            backdrop-filter: blur(5px);
+            width: 100%; height: 100%; max-width: 450px; background-color: transparent; 
+            display: none; /* Initially hidden */ flex-direction: column; position: relative; backdrop-filter: blur(5px);
         }
         
-        /* Header */
+        /* Header & Tabs */
         .header { padding: 15px 20px; background: transparent; z-index: 10; transition: 0.3s; }
         .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .header-title { font-size: 20px; font-weight: 900; color: var(--primary); margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        
-        .vip-badge { 
-            background: gold; color: #3e2723; 
-            font-family: 'Vazirmatn', sans-serif;
-            font-size: 11px; font-weight: 900; 
-            padding: 4px 10px; border-radius: 20px; 
-            display: none; 
-            box-shadow: 0 2px 10px rgba(255, 215, 0, 0.4);
-            letter-spacing: 0.5px;
-        }
-
         .header-actions { display: flex; gap: 10px; }
         .icon-btn { 
-            background: var(--bg-card); 
-            color: var(--text-muted); border: 1px solid var(--border); 
-            border-radius: 12px; width: 38px; height: 38px; 
-            display: flex; align-items: center; justify-content: center; 
-            cursor: pointer; transition: 0.2s; font-size: 18px; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            backdrop-filter: blur(4px);
+            background: var(--bg-card); color: var(--text-muted); border: 1px solid var(--border); 
+            border-radius: 12px; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; 
+            cursor: pointer; transition: 0.2s; font-size: 18px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
         
-        /* Tabs */
-        .tab-container { 
-            background: var(--bg-card); 
-            border-radius: 16px; padding: 5px; display: flex; position: relative; 
-            box-shadow: var(--shadow); 
-            border: 1px solid var(--border);
-            backdrop-filter: blur(10px);
-        }
+        .tab-container { background: var(--bg-card); border-radius: 16px; padding: 5px; display: flex; position: relative; box-shadow: var(--shadow); border: 1px solid var(--border); }
         .tab-btn { flex: 1; text-align: center; padding: 10px 0; font-size: 13px; font-weight: bold; color: var(--text-muted); cursor: pointer; z-index: 2; transition: color 0.3s; border-radius: 10px; }
         .tab-btn.active { color: var(--primary); }
         .tab-bg { position: absolute; top: 5px; bottom: 5px; right: 5px; width: calc(33.33% - 6px); background: var(--primary-light); border-radius: 12px; opacity: 0.5; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1; }
 
-        /* Content */
+        /* Content & Cards */
         .main-content { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 180px; scroll-behavior: smooth; }
         .main-content::-webkit-scrollbar { width: 0; }
         .page { display: none; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         .page.active { display: block; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Cards */
-        .card { 
-            background: var(--bg-card); 
-            border-radius: var(--radius); padding: 22px; margin-bottom: 18px; 
-            box-shadow: var(--shadow); border: 1px solid var(--border); 
-            transition: 0.3s; backdrop-filter: blur(12px);
-        }
+        .card { background: var(--bg-card); border-radius: var(--radius); padding: 22px; margin-bottom: 18px; box-shadow: var(--shadow); border: 1px solid var(--border); transition: 0.3s; }
         
         .input-group { flex: 1; display: flex; flex-direction: column; }
         .input-group label { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: bold; color: var(--text-muted); margin-bottom: 8px; height: 24px; }
         .input-row { display: flex; gap: 10px; align-items: flex-start; }
         
         input, select { 
-            width: 100%; padding: 12px; 
-            background: rgba(255,255,255,0.5);
-            border: 1px solid var(--border); border-radius: 12px; 
-            font-family: 'Vazirmatn'; font-size: 16px; color: var(--text-main); 
+            width: 100%; padding: 12px; background: rgba(255,255,255,0.5);
+            border: 1px solid var(--border); border-radius: 12px; font-family: 'Vazirmatn'; font-size: 16px; color: var(--text-main); 
             text-align: center; height: 48px; transition: 0.2s; font-weight: bold; 
         }
         [data-theme="dark"] input, [data-theme="dark"] select { background: rgba(0,0,0,0.2); }
         input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); transform: translateY(-1px); }
 
-        /* Buttons */
-        .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-family: 'Vazirmatn'; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;}
-        .btn-primary { 
-            background: linear-gradient(135deg, var(--primary), var(--active-toggle)); 
-            color: white; box-shadow: 0 4px 10px rgba(0,105,92, 0.3); 
-        }
+        /* Buttons & Toggles */
+        .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-family: 'Vazirmatn'; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;}
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--active-toggle)); color: white; box-shadow: 0 4px 10px rgba(0,105,92, 0.3); }
         .btn-primary:active { transform: scale(0.98); }
         .btn-ghost { background: transparent; color: var(--text-muted); font-size: 12px; padding: 5px; }
         .btn-add { background: var(--accent); color: white; margin-top: 0; height: 48px; width: 48px; border-radius: 12px; font-size: 24px; padding: 0; }
-        .btn-transfer { background: white; color: var(--primary); border: 1px solid var(--primary); border-radius: 8px; padding: 8px 15px; font-size: 12px; font-weight: bold; margin-top: 15px; cursor: pointer; width: 100%; }
-
-        /* Switches & Rate Badge */
-        .rate-badge {
-            display: inline-flex; align-items: center; gap: 5px;
-            background: var(--primary-light); border: 1px solid var(--border);
-            padding: 3px 8px; border-radius: 8px; cursor: pointer;
-            transition: 0.3s;
-        }
+        .btn-transfer { background: white; color: var(--primary); border: 1px solid var(--primary); border-radius: 8px; padding: 8px 15px; font-size: 12px; font-weight: bold; margin-top: 15px; cursor: pointer; width: 100%; transition: 0.2s; }
+        
+        .rate-badge { display: inline-flex; align-items: center; gap: 5px; background: var(--primary-light); border: 1px solid var(--border); padding: 3px 8px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
         .rate-badge.active { background: var(--active-toggle); border-color: var(--active-toggle); color: white; }
         .rate-text { font-size: 10px; font-weight: bold; }
         .rate-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-muted); transition: 0.3s; }
@@ -161,27 +126,25 @@
 
         .toggle-switch { position: relative; width: 36px; height: 20px; }
         .toggle-switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--border); transition: .4s; border-radius: 20px; }
+        .slider { position: absolute; cursor: pointer; inset: 0; background-color: var(--border); transition: .4s; border-radius: 20px; }
         .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
         input:checked + .slider { background-color: var(--active-toggle); }
         html[dir="rtl"] input:checked + .slider:before { transform: translateX(16px); }
 
         .chips { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 15px 0; }
         .chip { background: rgba(255,255,255,0.5); padding: 10px 0; border-radius: 10px; font-size: 13px; text-align: center; color: var(--text-muted); cursor: pointer; border: 1px solid var(--border); transition: 0.2s; font-weight: 500; }
-        .chip.selected { background: var(--primary); color: white; border-color: var(--primary); font-weight: bold; border: 1px solid var(--primary); }
+        .chip.selected { background: var(--primary); color: white; border-color: var(--primary); font-weight: bold; }
 
         .mode-switch { display: flex; background: rgba(255,255,255,0.5); padding: 4px; border-radius: 12px; margin-bottom: 15px; border: 1px solid var(--border); }
         .mode-btn { flex: 1; padding: 8px; text-align: center; font-size: 12px; cursor: pointer; border-radius: 10px; color: var(--text-muted); transition: 0.3s; font-weight: bold; }
         .mode-btn.active { background: var(--bg-card); color: var(--primary); box-shadow: var(--shadow); }
 
-        /* Result Panel */
+        /* Panels & Lists */
         .result-panel { background: linear-gradient(135deg, var(--primary), var(--active-toggle)); color: white; text-align: center; display: none; margin-top: 15px; border-radius: 16px; padding: 15px; box-shadow: 0 10px 30px -5px rgba(0,0,0,0.25); position: relative; overflow: hidden; }
-        .result-panel::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0) 60%); pointer-events: none; }
         .res-val { font-size: 24px; font-weight: 900; margin: 8px 0; letter-spacing: -1px; text-shadow: 0 2px 4px rgba(0,0,0,0.1); position: relative; }
         .res-lbl { font-size: 12px; opacity: 0.95; position: relative; }
         .res-sub { border-top: 1px dashed rgba(255,255,255,0.3); margin-top: 10px; padding-top: 10px; font-size: 13px; position: relative; }
 
-        .cheque-list { margin-top: 10px; }
         .cheque-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
         .c-date { font-weight: bold; font-size: 14px; color: var(--text-main); }
         .c-amt { color: var(--primary); font-weight: bold; font-size: 14px; }
@@ -198,33 +161,17 @@
 
         .date-select-group { display: flex; gap: 5px; direction: ltr; }
         .date-select-group select { padding: 8px 2px; font-size: 13px; direction: rtl; }
-        
         .ch-mode-panel { display: none; } .ch-mode-panel.active { display: block; animation: fadeIn 0.2s; }
         
-        /* Modal & Calc */
+        /* Modals & Calc */
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); z-index: 2000; display: none; justify-content: center; align-items: center; animation: fadeIn 0.2s; }
         .modal-box { background: var(--bg-card); padding: 25px; border-radius: 20px; width: 85%; max-width: 320px; text-align: center; max-height: 80vh; overflow-y: auto; box-shadow: var(--shadow); }
         .modal-close { position: absolute; top: 15px; left: 15px; font-size: 24px; cursor: pointer; color: var(--text-muted); width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.05); border-radius: 50%; }
-        .help-item { margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; text-align: right; }
-        .help-title { font-weight: 900; color: var(--primary); margin-bottom: 6px; display: block; font-size: 14px; }
-        .help-desc { font-size: 13px; color: var(--text-muted); line-height: 1.7; text-align: justify; }
-        .signature { text-align: center; font-size: 10px; opacity: 0.4; margin-top: 25px; margin-bottom: 5px; color: var(--text-main); }
-
-        /* Calculator Styles */
-        .calc-screen { 
-            width: 100%; height: 60px; background: var(--bg-app); border: 1px solid var(--border); 
-            border-radius: 12px; margin-bottom: 15px; font-size: 24px; font-weight: bold; 
-            text-align: left; padding: 10px 15px; color: var(--text-main); 
-            display: flex; align-items: center; direction: ltr; overflow-x: auto; 
-        }
-        .calc-grid { 
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; direction: ltr; /* FIX: LTR Direction for Calculator */
-        }
-        .calc-btn { 
-            background: rgba(255,255,255,0.5); border: 1px solid var(--border); border-radius: 10px; 
-            padding: 15px 0; font-size: 18px; font-weight: bold; color: var(--text-main); 
-            cursor: pointer; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
-        }
+        
+        /* LTR Standard Calculator */
+        .calc-screen { width: 100%; height: 60px; background: var(--bg-app); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 15px; font-size: 24px; font-weight: bold; text-align: left; padding: 10px 15px; color: var(--text-main); display: flex; align-items: center; direction: ltr; overflow-x: auto; }
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; direction: ltr; }
+        .calc-btn { background: rgba(255,255,255,0.5); border: 1px solid var(--border); border-radius: 10px; padding: 15px 0; font-size: 18px; font-weight: bold; color: var(--text-main); cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .calc-btn:active { transform: scale(0.95); background: var(--primary-light); }
         .btn-op { color: var(--primary); background: var(--primary-light); }
         .btn-eq { background: var(--primary); color: white; grid-column: span 4; }
@@ -235,6 +182,24 @@
 </head>
 <body>
 
+<div class="login-screen" id="loginScreen">
+    <div class="login-card">
+        <div style="font-size: 45px; margin-bottom: 15px; animation: fadeIn 1s;">🛡️</div>
+        <h2 style="color: var(--primary); margin-top: 0; margin-bottom: 25px; font-weight: 900;">ورود به سیستم</h2>
+        
+        <div class="input-group" style="margin-bottom: 15px;">
+            <input type="email" id="emailInput" placeholder="ایمیل کاربری" dir="ltr" style="background: rgba(255,255,255,0.8);">
+        </div>
+        
+        <div class="input-group" style="margin-bottom: 25px;">
+            <input type="password" id="passwordInput" placeholder="رمز عبور" dir="ltr" style="background: rgba(255,255,255,0.8);">
+        </div>
+        
+        <button class="btn btn-primary" id="loginBtn" onclick="handleLogin()">تأیید و ورود</button>
+        <p id="loginError" style="color: var(--danger); font-size: 12px; margin-top: 15px; display: none; font-weight: bold;"></p>
+    </div>
+</div>
+
 <div class="app-container" id="appContainer">
     
     <div class="header">
@@ -243,11 +208,9 @@
                 <div class="icon-btn" onclick="toggleHelp()">?</div>
                 <div class="icon-btn" onclick="toggleTheme()" id="themeIcon">🌙</div>
                 <div class="icon-btn" onclick="toggleCalc()">🧮</div>
+                <div class="icon-btn" onclick="handleLogout()" style="color: var(--danger);" title="خروج">🚪</div>
             </div>
-            <div style="display:flex; align-items:center; gap:5px;">
-                <div class="vip-badge" id="vipBadge">VIP</div>
-                <h1 class="header-title">جعبه ابزار مالی</h1>
-            </div>
+            <h1 class="header-title">دستیار مالی</h1>
         </div>
 
         <div class="tab-container" id="tabContainer">
@@ -261,14 +224,14 @@
     <div class="main-content" id="mainContent">
         
         <div class="page active" id="page0">
-            <div class="card">
+            <div class="card" style="margin-bottom: 15px;">
                 <div class="input-group">
                     <label>مبلغ وام (تومان)</label>
-                    <input type="tel" id="loanAmount" placeholder="مثلاً ۵۰,۰۰۰,۰۰۰" oninput="fmt(this); calcLoan()">
+                    <input type="tel" id="loanAmount" placeholder="مثلاً ۵۰,۰۰۰,۰۰۰" oninput="fmt(this); calcAllLoans()">
                 </div>
                 
-                <div class="input-row">
-                    <div class="input-group" style="flex:1">
+                <div class="input-row" style="align-items: center;">
+                    <div class="input-group" style="flex:1; margin-bottom: 0;">
                         <label>
                             سود %
                             <div class="rate-badge" id="loanRateBadge" onclick="toggleRate('loan')">
@@ -276,40 +239,22 @@
                                 <span class="rate-text">۴.۵٪</span>
                             </div>
                         </label>
-                        <input type="tel" id="loanRate" value="۳.۹" oninput="fmtFa(this); calcLoan()">
+                        <input type="tel" id="loanRate" value="۳.۹" oninput="fmtFa(this); calcAllLoans()">
                     </div>
-                    <div class="input-group" style="flex:1">
-                        <label>تعداد اقساط</label>
-                        <input type="tel" id="loanMonths" value="۴" oninput="fmtFa(this); calcLoan()">
+                    
+                    <div style="display:flex; flex-direction:column; align-items:center; margin-top: 15px; margin-right: 15px;">
+                        <label style="margin:0; font-size:11px; font-weight:bold; margin-bottom:5px;">سود اضافه (+۱)</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="loanExtra" onchange="calcAllLoans()">
+                            <span class="slider"></span>
+                        </label>
                     </div>
-                </div>
-
-                <div class="chips">
-                    <div class="chip selected" onclick="setMLoan(4, this)">۴ ماه</div>
-                    <div class="chip" onclick="setMLoan(8, this)">۸ ماه</div>
-                    <div class="chip" onclick="setMLoan(12, this)">۱۲ ماه</div>
-                    <div class="chip" onclick="setMLoan(16, this)">۱۶ ماه</div>
-                </div>
-
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
-                    <label style="margin:0; font-size:13px; font-weight:bold; color:var(--text-main);">یک ماه سود اضافه (+۱)</label>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="loanExtra" onchange="calcLoan()">
-                        <span class="slider"></span>
-                    </label>
                 </div>
             </div>
 
-            <div class="card result-panel" id="loanResult">
-                <div class="res-lbl" id="loanTotal"></div>
-                <div class="res-val" id="loanMonthly"></div>
-                <div class="res-sub" id="loanInterest"></div>
-                <div style="font-size:10px; margin-top:5px; opacity:0.7;">(رُند شده به ۵۰۰۰ تومان بالا)</div>
-                <button class="btn-transfer" id="btnTransfer" onclick="transferToCheque()">تولید چک‌های این وام ⬅️</button>
+            <div id="autoLoanResults" style="padding-bottom: 20px;">
+                <div class="empty-list">مبلغ وام را وارد کنید تا محاسبات خودکار انجام شود.</div>
             </div>
-            
-            <button class="btn btn-primary" onclick="calcLoan()">محاسبه</button>
-            <button class="btn btn-ghost" onclick="resetLoan()">پاکسازی فرم</button>
         </div>
 
         <div class="page" id="page1">
@@ -323,16 +268,12 @@
                         <label>
                             سود %
                             <div class="rate-badge" id="revRateBadge" onclick="toggleRate('rev')">
-                                <span class="rate-dot"></span>
-                                <span class="rate-text">۴.۵٪</span>
+                                <span class="rate-dot"></span><span class="rate-text">۴.۵٪</span>
                             </div>
                         </label>
                         <input type="tel" id="revRate" value="۳.۹" oninput="fmtFa(this); calcRev()">
                     </div>
-                    <div class="input-group">
-                        <label>تعداد اقساط</label>
-                        <input type="tel" id="revMonths" value="۴" oninput="fmtFa(this); calcRev()">
-                    </div>
+                    <div class="input-group"><label>تعداد اقساط</label><input type="tel" id="revMonths" value="۴" oninput="fmtFa(this); calcRev()"></div>
                 </div>
 
                 <div class="chips">
@@ -343,11 +284,8 @@
                 </div>
 
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
-                    <label style="margin:0; font-size:13px; font-weight:bold; color:var(--text-main);">سود اضافه (+۱)</label>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="revExtra" onchange="calcRev()">
-                        <span class="slider"></span>
-                    </label>
+                    <label style="margin:0; font-size:13px; font-weight:bold;">سود اضافه (+۱)</label>
+                    <label class="toggle-switch"><input type="checkbox" id="revExtra" onchange="calcRev()"><span class="slider"></span></label>
                 </div>
             </div>
 
@@ -388,35 +326,19 @@
             <div class="card">
                 <div id="panelSingle" class="ch-mode-panel active">
                     <div class="input-row">
-                        <div class="input-group" style="flex:1">
-                            <label>مبلغ چک</label>
-                            <input type="tel" id="chAmtS" placeholder="تومان" oninput="fmt(this)">
-                        </div>
-                        <div class="input-group" style="width: 55px; flex:none;">
-                            <label>&nbsp;</label>
-                            <button class="btn-add" onclick="addSingle()">+</button>
-                        </div>
+                        <div class="input-group" style="flex:1"><label>مبلغ چک</label><input type="tel" id="chAmtS" placeholder="تومان" oninput="fmt(this)"></div>
+                        <div class="input-group" style="width: 55px; flex:none;"><label>&nbsp;</label><button class="btn-add" onclick="addSingle()">+</button></div>
                     </div>
                     <div class="input-group">
                         <label>تاریخ چک</label>
-                        <div class="date-select-group">
-                            <select id="chYS"></select>
-                            <select id="chMS"></select>
-                            <select id="chDS"></select>
-                        </div>
+                        <div class="date-select-group"><select id="chYS"></select><select id="chMS"></select><select id="chDS"></select></div>
                     </div>
                 </div>
 
                 <div id="panelBatch" class="ch-mode-panel">
                     <div class="input-row">
-                        <div class="input-group" style="flex:2">
-                            <label>مبلغ هر چک</label>
-                            <input type="tel" id="chAmtB" placeholder="تومان" oninput="fmt(this)">
-                        </div>
-                        <div class="input-group" style="flex:1">
-                            <label>تعداد</label>
-                            <input type="tel" id="chCntB" placeholder="عدد" oninput="fmtFa(this)">
-                        </div>
+                        <div class="input-group" style="flex:2"><label>مبلغ هر چک</label><input type="tel" id="chAmtB" placeholder="تومان" oninput="fmt(this)"></div>
+                        <div class="input-group" style="flex:1"><label>تعداد</label><input type="tel" id="chCntB" placeholder="عدد" oninput="fmtFa(this)"></div>
                     </div>
                     <div class="input-row">
                         <div class="input-group" style="flex:1">
@@ -428,11 +350,7 @@
                         </div>
                         <div class="input-group" style="flex:2">
                             <label>تاریخ شروع</label>
-                            <div class="date-select-group">
-                                <select id="chYB"></select>
-                                <select id="chMB"></select>
-                                <select id="chDB"></select>
-                            </div>
+                            <div class="date-select-group"><select id="chYB"></select><select id="chMB"></select><select id="chDB"></select></div>
                         </div>
                     </div>
                     <button class="btn btn-primary" onclick="addBatch()">تولید لیست</button>
@@ -440,34 +358,19 @@
 
                 <div id="panelSmart" class="ch-mode-panel">
                     <div class="input-row">
-                        <div class="input-group" style="flex:2">
-                            <label>مبلغ خالص مورد نیاز</label>
-                            <input type="tel" id="chNetSmart" placeholder="تومان" oninput="fmt(this)">
-                        </div>
-                        <div class="input-group" style="flex:1">
-                            <label>تعداد چک</label>
-                            <input type="tel" id="chCntSmart" placeholder="عدد" oninput="fmtFa(this)">
-                        </div>
+                        <div class="input-group" style="flex:2"><label>مبلغ خالص مورد نیاز</label><input type="tel" id="chNetSmart" placeholder="تومان" oninput="fmt(this)"></div>
+                        <div class="input-group" style="flex:1"><label>تعداد چک</label><input type="tel" id="chCntSmart" placeholder="عدد" oninput="fmtFa(this)"></div>
                     </div>
                     <div class="input-row">
                         <div class="input-group" style="flex:1">
                             <label>فاصله</label>
                             <select id="chStepSmart" style="padding:0 5px;" onchange="updateSmartDate()">
-                                <option value="1">۱ ماهه</option>
-                                <option value="45">۴۵ روزه</option>
-                                <option value="2">۲ ماهه</option>
-                                <option value="3">۳ ماهه</option>
-                                <option value="4">۴ ماهه</option>
-                                <option value="6">۶ ماهه</option>
+                                <option value="1">۱ ماهه</option><option value="45">۴۵ روزه</option><option value="2">۲ ماهه</option><option value="3">۳ ماهه</option><option value="4">۴ ماهه</option><option value="6">۶ ماهه</option>
                             </select>
                         </div>
                         <div class="input-group" style="flex:2">
                             <label>تاریخ اولین چک</label>
-                            <div class="date-select-group">
-                                <select id="chYSmart"></select>
-                                <select id="chMSmart"></select>
-                                <select id="chDSmart"></select>
-                            </div>
+                            <div class="date-select-group"><select id="chYSmart"></select><select id="chMSmart"></select><select id="chDSmart"></select></div>
                         </div>
                     </div>
                     <button class="btn btn-primary" onclick="calcSmartRas()">محاسبه و تولید</button>
@@ -476,9 +379,7 @@
 
             <div class="card" style="padding: 15px; min-height: 100px;">
                 <div style="font-size:12px; font-weight:bold; color:var(--text-muted); margin-bottom:10px;">لیست چک‌ها</div>
-                <div class="cheque-list" id="chList">
-                    <div class="empty-list">هنوز چکی وارد نشده است</div>
-                </div>
+                <div class="cheque-list" id="chList"><div class="empty-list">هنوز چکی وارد نشده است</div></div>
             </div>
         </div>
     </div>
@@ -490,13 +391,8 @@
             <div class="stat-item"><span class="stat-val" id="fInt">۰</span><span class="stat-lbl">کارمزد</span></div>
             <div class="stat-item"><span class="stat-val" id="fTot">۰</span><span class="stat-lbl">کل</span></div>
         </div>
-        <div class="final-box">
-            <span style="font-size:13px;">خالص دریافتی:</span>
-            <span class="final-val" id="fNet">۰</span>
-        </div>
-        <div style="text-align:center; font-size:11px; margin-top:5px; color:var(--text-muted);">
-            تاریخ رأس: <span id="fDate" style="font-weight:bold;">---</span>
-        </div>
+        <div class="final-box"><span style="font-size:13px;">خالص دریافتی:</span><span class="final-val" id="fNet">۰</span></div>
+        <div style="text-align:center; font-size:11px; margin-top:5px; color:var(--text-muted);">تاریخ رأس: <span id="fDate" style="font-weight:bold;">---</span></div>
     </div>
 
     <div id="calcModal" class="modal" onclick="if(event.target===this)toggleCalc()">
@@ -508,40 +404,24 @@
                 <div class="calc-btn btn-op" onclick="calcAppend('back')">⌫</div>
                 <div class="calc-btn btn-op" onclick="calcAppend('%')">%</div>
                 <div class="calc-btn btn-op" onclick="calcAppend('/')">÷</div>
-                
                 <div class="calc-btn" onclick="calcAppend('7')">7</div>
                 <div class="calc-btn" onclick="calcAppend('8')">8</div>
                 <div class="calc-btn" onclick="calcAppend('9')">9</div>
                 <div class="calc-btn btn-op" onclick="calcAppend('*')">×</div>
-                
                 <div class="calc-btn" onclick="calcAppend('4')">4</div>
                 <div class="calc-btn" onclick="calcAppend('5')">5</div>
                 <div class="calc-btn" onclick="calcAppend('6')">6</div>
                 <div class="calc-btn btn-op" onclick="calcAppend('-')">-</div>
-                
                 <div class="calc-btn" onclick="calcAppend('1')">1</div>
                 <div class="calc-btn" onclick="calcAppend('2')">2</div>
                 <div class="calc-btn" onclick="calcAppend('3')">3</div>
                 <div class="calc-btn btn-op" onclick="calcAppend('+')">+</div>
-                
                 <div class="calc-btn" onclick="calcAppend('0')">0</div>
                 <div class="calc-btn btn-00" onclick="calcAppend('00')">00</div>
                 <div class="calc-btn btn-00" onclick="calcAppend('000')">000</div>
                 <div class="calc-btn" onclick="calcAppend('.')">.</div>
-                
                 <div class="calc-btn btn-eq" onclick="calcResult()">=</div>
             </div>
-        </div>
-    </div>
-
-    <div id="vipModal" class="modal" onclick="if(event.target===this)this.style.display='none'">
-        <div class="modal-box">
-            <span class="vip-icon">👑</span>
-            <h3 style="margin:0; margin-bottom:10px;">فعال‌سازی VIP</h3>
-            <p style="font-size:13px; color:var(--text-muted);">برای استفاده نامحدود، شناسه زیر را برای پشتیبانی ارسال کنید:</p>
-            <div class="vip-id-box" id="deviceIdBox">---</div>
-            <p style="font-size:11px; margin-bottom:15px; color:var(--text-muted);">پس از پرداخت، برنامه را مجدداً باز کنید.</p>
-            <button class="btn-vip" onclick="location.reload()">بروزرسانی وضعیت</button>
         </div>
     </div>
 
@@ -550,32 +430,96 @@
             <div class="modal-close" onclick="toggleHelp()">×</div>
             <h3>راهنمای استفاده</h3>
             <div class="help-item">
-                <span class="help-title">۱. اقساط وام</span>
-                <span class="help-desc">
-                    محاسبه قسط، سود و بازپرداخت.
-                    <br><b>گزینه ۴.۵٪:</b> محاسبه سریع با نرخ سود بازار.
-                    <br><b>انتقال به چک:</b> مبلغ چک‌ها طوری تنظیم می‌شود که خالص دریافتی (با کسر سود چک) دقیقاً برابر مبلغ وام شود.
-                </span>
+                <span style="font-weight: 900; color: var(--primary); display: block;">۱. اقساط وام</span>
+                <span style="font-size: 13px; color: var(--text-muted); line-height: 1.7;">فقط مبلغ وام را وارد کنید تا تمام ماه‌ها همزمان محاسبه شوند.</span>
             </div>
-            <div class="help-item"><span class="help-title">۲. معکوس</span>محاسبه مبلغ نقد کالا بر اساس توان پرداخت قسط مشتری.</div>
-            <div class="help-item">
-                <span class="help-title">۳. رأس‌گیر چک</span>
-                <span class="help-desc">
-                    محاسبه تاریخ رأس و سود چک‌ها.
-                    <br><b>ورود تکی:</b> برای چک‌های نامنظم.
-                    <br><b>معکوس چک:</b> مبلغ خالصی که نیاز دارید را وارد کنید، برنامه مبلغ چک‌ها را حساب می‌کند.
-                </span>
-            </div>
-            <div class="signature">برنامه نویس: حیدر حیدری</div>
         </div>
     </div>
 
 </div>
 
 <script>
-    // تنظیمات گوگل شیت (لینک اسکریپت را اینجا بگذارید)
-    const SCRIPT_URL = "URL_GOOGLE_SCRIPT_SHOMA"; 
+    // ==========================================
+    // تنظیمات FIREBASE - بسیار مهم
+    // ==========================================
+    // کدهای زیر را از پنل فایربیس خود کپی کرده و اینجا جایگزین کنید:
+    const firebaseConfig = {
+  apiKey: "AIzaSyBYOfhWwOkF7qAJnlPlksMwgjtfJN8775c",
+  authDomain: "financialapp-1c7b2.firebaseapp.com",
+  projectId: "financialapp-1c7b2",
+  storageBucket: "financialapp-1c7b2.firebasestorage.app",
+  messagingSenderId: "61555758044",
+  appId: "1:61555758044:web:55272f5876091dfca6b519",
+  measurementId: "G-S2P61VCZCT"
+};
 
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // بررسی وضعیت ورود کاربر
+    auth.onAuthStateChanged(user => {
+        const loginScreen = document.getElementById('loginScreen');
+        const appContainer = document.getElementById('appContainer');
+        const loginBtn = document.getElementById('loginBtn');
+        
+        loginBtn.innerText = "تأیید و ورود";
+        loginBtn.disabled = false;
+
+        if (user) {
+            // کاربر لاگین کرده است
+            loginScreen.style.display = 'none';
+            appContainer.style.display = 'flex';
+            initDate(); // مقداردهی اولیه برنامه
+        } else {
+            // کاربر خارج شده یا لاگین نیست
+            loginScreen.style.display = 'flex';
+            appContainer.style.display = 'none';
+        }
+    });
+
+    // تابع ورود
+    function handleLogin() {
+        const email = document.getElementById('emailInput').value;
+        const password = document.getElementById('passwordInput').value;
+        const errBox = document.getElementById('loginError');
+        const btn = document.getElementById('loginBtn');
+
+        if(!email || !password) {
+            errBox.innerText = "لطفاً ایمیل و رمز را وارد کنید.";
+            errBox.style.display = 'block';
+            return;
+        }
+
+        btn.innerText = "در حال بررسی...";
+        btn.disabled = true;
+        errBox.style.display = 'none';
+
+        auth.signInWithEmailAndPassword(email, password)
+            .catch(error => {
+                btn.innerText = "تأیید و ورود";
+                btn.disabled = false;
+                errBox.innerText = "ایمیل یا رمز عبور اشتباه است!";
+                errBox.style.display = 'block';
+                setTimeout(() => errBox.style.display = 'none', 3000);
+            });
+    }
+
+    // ورود با زدن اینتر
+    document.getElementById('passwordInput').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') handleLogin();
+    });
+
+    // تابع خروج
+    function handleLogout() {
+        if(confirm("آیا برای خروج از حساب مطمئن هستید؟")) {
+            auth.signOut();
+        }
+    }
+
+    // ==========================================
+    // لاجیک اصلی برنامه (بدون تغییر)
+    // ==========================================
     const _ = id => document.getElementById(id);
     const toFa = n => (n===undefined||n===null)?'':n.toString().replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]);
     const toEn = s => s ? s.toString().replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d)).replace(/,/g,'') : '';
@@ -583,31 +527,7 @@
     function fmt(el) { let v = toEn(el.value).replace(/[^0-9]/g,''); el.value = v ? toFa(parseInt(v).toLocaleString()) : ''; }
     function fmtFa(el) { let v = toEn(el.value); el.value = v ? toFa(v) : ''; }
 
-    // --- VIP & Security ---
-    let deviceId = localStorage.getItem('did') || 'U' + Math.floor(Math.random() * 9000000);
-    localStorage.setItem('did', deviceId);
-    _('deviceIdBox').innerText = deviceId;
-    let userStatus = { status: "Free", loan: 0, ras: 0 };
-    const LIMITS = { loan: 5, ras: 1 };
-
-    window.addEventListener('load', () => { initDate(); setupSwipe(); });
-
-    // --- Logic ---
-    function toggleRate(type) {
-        const input = _(type + 'Rate');
-        const badge = _(type + 'RateBadge');
-        const is45 = input.value == toFa(4.5);
-        
-        if (is45) {
-            input.value = toFa(3.9);
-            badge.classList.remove('active');
-        } else {
-            input.value = toFa(4.5);
-            badge.classList.add('active');
-        }
-        
-        if(type==='loan') calcLoan(); else calcRev();
-    }
+    window.addEventListener('load', () => { setupSwipe(); });
 
     let currentTab = 0;
     function setTab(idx) {
@@ -615,19 +535,17 @@
         document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
         document.querySelectorAll('.page').forEach((p, i) => p.classList.toggle('active', i === idx));
         _('tabIndicator').style.transform = `translateX(${idx * -100}%)`;
-        const footer = _('chFooter');
-        footer.style.display = (idx === 2) ? 'block' : 'none';
+        _('chFooter').style.display = (idx === 2) ? 'block' : 'none';
     }
 
-    // Swipe Feature
     function setupSwipe() {
         let startX = 0;
         const content = _('mainContent');
         content.addEventListener('touchstart', e => startX = e.changedTouches[0].screenX);
         content.addEventListener('touchend', e => {
             const endX = e.changedTouches[0].screenX;
-            if (endX < startX - 50 && currentTab < 2) setTab(currentTab + 1); // Swipe Left -> Next
-            if (endX > startX + 50 && currentTab > 0) setTab(currentTab - 1); // Swipe Right -> Prev
+            if (endX < startX - 50 && currentTab < 2) setTab(currentTab + 1);
+            if (endX > startX + 50 && currentTab > 0) setTab(currentTab - 1);
         });
     }
 
@@ -638,299 +556,157 @@
         themeIndex = (themeIndex + 1) % themes.length;
         const newTheme = themes[themeIndex];
         const html = document.documentElement;
-        
-        if(newTheme) html.setAttribute('data-theme', newTheme);
-        else html.removeAttribute('data-theme');
-        
+        if(newTheme) html.setAttribute('data-theme', newTheme); else html.removeAttribute('data-theme');
         _('themeIcon').innerText = themeIcons[themeIndex];
-        
-        let color = '#F3F4F6';
-        if(newTheme === 'dark') color = '#111827';
-        if(newTheme === 'year') color = '#FFF3E0';
+        let color = newTheme === 'dark' ? '#111827' : newTheme === 'year' ? '#FFF3E0' : '#F3F4F6';
         document.querySelector('meta[name="theme-color"]').setAttribute('content', color);
     }
 
     function toggleHelp() {
-        const m = _('helpModal');
-        m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
+        const m = _('helpModal'); m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
     }
 
-    // Calculator
     let calcExp = '';
     function toggleCalc() {
-        const m = _('calcModal');
-        m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
+        const m = _('calcModal'); m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
         if(m.style.display === 'none') { calcExp = ''; updateCalcScreen(); }
     }
-    
     function calcAppend(val) {
-        if(val === 'C') calcExp = '';
-        else if(val === 'back') calcExp = calcExp.slice(0, -1);
-        else if(val === '%') calcExp += '/100';
-        else calcExp += val;
+        if(val === 'C') calcExp = ''; else if(val === 'back') calcExp = calcExp.slice(0, -1); else if(val === '%') calcExp += '/100'; else calcExp += val;
         updateCalcScreen();
     }
-    
     function calcResult() {
-        try {
-            let safeExp = calcExp.replace(/×/g, '*').replace(/÷/g, '/');
-            if(/^[0-9+\-*/.() ]+$/.test(safeExp) || safeExp.includes('/100')) {
-                calcExp = eval(safeExp).toString();
-            }
-        } catch(e) {
-            calcExp = 'Error';
-        }
-        updateCalcScreen();
+        try { let safeExp = calcExp.replace(/×/g, '*').replace(/÷/g, '/'); if(/^[0-9+\-*/.() ]+$/.test(safeExp) || safeExp.includes('/100')) calcExp = eval(safeExp).toString(); } 
+        catch(e) { calcExp = 'Error'; } updateCalcScreen();
     }
-    
-    function updateCalcScreen() {
-        _('calcScreen').innerText = toFa(calcExp) || '۰';
+    function updateCalcScreen() { _('calcScreen').innerText = toFa(calcExp) || '۰'; }
+
+    function toggleRate(type) {
+        const input = _(type + 'Rate'); const badge = _(type + 'RateBadge');
+        if (input.value == toFa(4.5)) { input.value = toFa(3.9); badge.classList.remove('active'); } 
+        else { input.value = toFa(4.5); badge.classList.add('active'); }
+        if(type==='loan') calcAllLoans(); else calcRev();
     }
 
-    // LOAN
-    let lastCalculatedMonthly = 0;
-    let lastPrincipal = 0;
-    function setMLoan(m, el) { _('loanMonths').value = toFa(m); _('page0').querySelectorAll('.chip').forEach(c => c.classList.remove('selected')); el.classList.add('selected'); calcLoan(); }
-    function calcLoan() {
-        let p = parseFloat(toEn(_('loanAmount').value)), m = parseInt(toEn(_('loanMonths').value)), r = parseFloat(toEn(_('loanRate').value));
-        if(!p || !m) { _('loanResult').style.display='none'; return; }
+    function calcAllLoans() {
+        let pStr = toEn(_('loanAmount').value), p = parseFloat(pStr);
+        let rStr = toEn(_('loanRate').value), r = parseFloat(rStr);
+        const container = _('autoLoanResults');
+        if(!p || isNaN(p) || p === 0 || !r || isNaN(r)) { container.innerHTML = '<div class="empty-list">مبلغ وام و سود را وارد کنید تا محاسبات انجام شود.</div>'; return; }
+        
         let extra = _('loanExtra').checked ? 1 : 0;
-        let interest = p * (r/100) * (m + extra);
-        let total = p + interest;
-        let monthly = Math.ceil((total / m) / 5000) * 5000;
-        let finalTotal = monthly * m;
-        let finalInt = finalTotal - p;
-        lastCalculatedMonthly = monthly;
-        lastPrincipal = p;
-        _('loanTotal').innerText = `بازپرداخت کل: ${toFa(sep(finalTotal))} تومان`;
-        _('loanMonthly').innerText = `${toFa(sep(monthly))} تومان`;
-        _('loanInterest').innerText = `سود خالص: ${toFa(sep(finalInt))} تومان`;
-        _('loanResult').style.display='block';
+        let html = '';
+        [4, 8, 12, 16].forEach(m => {
+            let interest = p * (r/100) * (m + extra);
+            let total = p + interest;
+            let monthly = Math.ceil((total / m) / 5000) * 5000;
+            let finalInt = (monthly * m) - p;
+            
+            html += `
+            <div class="card" style="padding: 16px; margin-bottom: 12px; border-radius: 16px;">
+                <div style="display:flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--border); padding-bottom: 8px; margin-bottom: 12px;">
+                    <span style="font-size: 16px; font-weight: 900; color: var(--primary);">${toFa(m)} ماهه</span>
+                    <span style="font-size: 11px; color: var(--text-muted); font-weight: bold;">سود خالص: ${toFa(sep(finalInt))}</span>
+                </div>
+                <div style="display:flex; justify-content: space-between; align-items: center;">
+                    <div><div style="font-size: 11px; color: var(--text-muted); font-weight: bold;">قسط ماهانه:</div><div style="font-size: 18px; font-weight: 900; color: var(--text-main);">${toFa(sep(monthly))} <span style="font-size:10px; font-weight:normal;">تومان</span></div></div>
+                    <button class="btn-transfer" style="width: auto; margin-top: 0; padding: 8px 14px;" onclick="transferSpecificToCheque(${p}, ${m})">تولید چک ⬅️</button>
+                </div>
+            </div>`;
+        });
+        container.innerHTML = html;
     }
-    function resetLoan() { _('loanAmount').value=''; _('loanResult').style.display='none'; _('loanRate').value=toFa(3.9); _('loanRateBadge').classList.remove('active'); }
 
-    function transferToCheque() {
-        let principal = lastPrincipal || parseFloat(toEn(_('loanAmount').value));
-        let cnt = parseInt(toEn(_('loanMonths').value));
+    function transferSpecificToCheque(principal, cnt) {
         let targetRate = parseFloat(toEn(_('chRate').value)) || 5; 
-
-        if (!principal || !cnt) return alert("لطفا ابتدا محاسبه کنید");
-
-        setTab(2);
-        setChMode('batch');
-        
-        let step = 1; 
-        _('chStepB').value = step;
-        
-        let avgMonths = ((cnt + 1) / 2) * step;
-        let factor = 1 - ((targetRate / 100) * (avgMonths)); 
-        
+        setTab(2); setChMode('batch'); _('chStepB').value = 1; 
+        let factor = 1 - ((targetRate / 100) * (((cnt + 1) / 2) * 1)); 
         if (factor <= 0) return alert("نرخ سود بسیار زیاد است");
-
-        let requiredTotal = principal / factor;
-        let singleCheck = Math.ceil((requiredTotal / cnt) / 5000) * 5000;
-
-        _('chAmtB').value = toFa(sep(singleCheck));
-        _('chCntB').value = toFa(cnt);
-        updDefDateBatch();
+        _('chAmtB').value = toFa(sep(Math.ceil(((principal / factor) / cnt) / 5000) * 5000));
+        _('chCntB').value = toFa(cnt); updDefDateBatch();
     }
 
-    // REVERSE
     function setMRev(m, el) { _('revMonths').value = toFa(m); _('page1').querySelectorAll('.chip').forEach(c => c.classList.remove('selected')); el.classList.add('selected'); calcRev(); }
     function calcRev() {
         let mont = parseFloat(toEn(_('revAmount').value)), m = parseInt(toEn(_('revMonths').value)), r = parseFloat(toEn(_('revRate').value));
         if(!mont || !m) { _('revResult').style.display='none'; return; }
         let extra = _('revExtra').checked ? 1 : 0;
-        let factor = 1 + ((r/100) * (m + extra));
-        let principal = Math.round((mont * m) / factor);
+        let principal = Math.round((mont * m) / (1 + ((r/100) * (m + extra))));
         _('revPrincipal').innerText = `${toFa(sep(principal))} تومان`;
         _('revTotal').innerText = `جمع بازپرداخت: ${toFa(sep(mont*m))}`;
         _('revResult').style.display='block';
     }
 
-    // CHEQUE
     let cheques=[], baseDate={};
     function initDate() {
         const fill = (ids, start, end) => { ids.forEach(id => { let h=''; for(let i=start; i<=end; i++) h+=`<option value="${i}">${toFa(i)}</option>`; _(id).innerHTML=h; }); };
-        fill(['baseD','chDS','chDB','chDSmart'],1,31); 
-        fill(['baseM','chMS','chMB','chMSmart'],1,12); 
-        fill(['baseY','chYS','chYB','chYSmart'],1402,1410);
-        
-        const j = gregorianToJalali(new Date());
-        baseDate = {y:j[0], m:j[1], d:j[2]};
+        fill(['baseD','chDS','chDB','chDSmart'],1,31); fill(['baseM','chMS','chMB','chMSmart'],1,12); fill(['baseY','chYS','chYB','chYSmart'],1402,1410);
+        const j = gregorianToJalali(new Date()); baseDate = {y:j[0], m:j[1], d:j[2]};
         _('baseY').value=j[0]; _('baseM').value=j[1]; _('baseD').value=j[2];
-        
-        updDefDateBatch();
-        updateSmartDate();
-        _('chYS').value=j[0]; _('chMS').value=j[1]; _('chDS').value=j[2];
+        updDefDateBatch(); updateSmartDate(); _('chYS').value=j[0]; _('chMS').value=j[1]; _('chDS').value=j[2];
     }
-    
     function updBase() { baseDate = {y:parseInt(_('baseY').value), m:parseInt(_('baseM').value), d:parseInt(_('baseD').value)}; calcCh(); }
-    
     function updDefDateBatch() {
-        let step = parseInt(_('chStepB').value);
-        let by = parseInt(_('baseY').value), bm = parseInt(_('baseM').value), bd = parseInt(_('baseD').value);
-        let g = jalaliToGregorian(by, bm, bd);
-        let d = new Date(g.y, g.m-1, g.d); d.setMonth(d.getMonth()+step);
-        let j = gregorianToJalali(d);
+        let d = new Date(jalaliToGregorian(_('baseY').value, _('baseM').value, _('baseD').value).y, jalaliToGregorian(_('baseY').value, _('baseM').value, _('baseD').value).m-1, jalaliToGregorian(_('baseY').value, _('baseM').value, _('baseD').value).d); 
+        d.setMonth(d.getMonth()+parseInt(_('chStepB').value)); let j = gregorianToJalali(d);
         _('chYB').value=j[0]; _('chMB').value=j[1]; _('chDB').value=j[2];
     }
-
     function updateSmartDate() {
-        let step = parseInt(_('chStepSmart').value);
-        if(step === 45) step = 1; 
-        let by = parseInt(_('baseY').value), bm = parseInt(_('baseM').value), bd = parseInt(_('baseD').value);
-        let g = jalaliToGregorian(by, bm, bd);
-        let d = new Date(g.y, g.m-1, g.d); 
-        
-        if(_('chStepSmart').value === "45") d.setDate(d.getDate() + 45);
-        else d.setMonth(d.getMonth() + step);
-        
-        let j = gregorianToJalali(d);
-        _('chYSmart').value=j[0]; _('chMSmart').value=j[1]; _('chDSmart').value=j[2];
+        let step = parseInt(_('chStepSmart').value), g = jalaliToGregorian(_('baseY').value, _('baseM').value, _('baseD').value), d = new Date(g.y, g.m-1, g.d); 
+        if(step === 45) d.setDate(d.getDate() + 45); else d.setMonth(d.getMonth() + step);
+        let j = gregorianToJalali(d); _('chYSmart').value=j[0]; _('chMSmart').value=j[1]; _('chDSmart').value=j[2];
     }
-
     function setChMode(m) {
-        _('btnModeSingle').classList.remove('active'); _('btnModeBatch').classList.remove('active'); _('btnModeSmart').classList.remove('active');
-        _('panelSingle').classList.remove('active'); _('panelBatch').classList.remove('active'); _('panelSmart').classList.remove('active');
-        
-        if(m==='single') { _('btnModeSingle').classList.add('active'); _('panelSingle').classList.add('active'); }
-        else if(m==='batch') { _('btnModeBatch').classList.add('active'); _('panelBatch').classList.add('active'); }
-        else { _('btnModeSmart').classList.add('active'); _('panelSmart').classList.add('active'); }
+        ['Single', 'Batch', 'Smart'].forEach(t => { _('btnMode'+t).classList.remove('active'); _('panel'+t).classList.remove('active'); });
+        let tm = m.charAt(0).toUpperCase() + m.slice(1); _('btnMode'+tm).classList.add('active'); _('panel'+tm).classList.add('active');
     }
 
-    function addSingle() {
-        let amt = parseInt(toEn(_('chAmtS').value)); if(!amt) return;
-        cheques.push({ y:parseInt(_('chYS').value), m:parseInt(_('chMS').value), d:parseInt(_('chDS').value), amt:amt });
-        recalcBalances(); renderCh(); _('chAmtS').value='';
-    }
-
+    function addSingle() { let amt = parseInt(toEn(_('chAmtS').value)); if(!amt) return; cheques.push({ y:parseInt(_('chYS').value), m:parseInt(_('chMS').value), d:parseInt(_('chDS').value), amt:amt }); recalcBalances(); renderCh(); _('chAmtS').value=''; }
     function addBatch() {
-        let amt = parseInt(toEn(_('chAmtB').value)), cnt = parseInt(toEn(_('chCntB').value)); if(!amt||!cnt) return;
-        let step = parseInt(_('chStepB').value);
-        let sy=parseInt(_('chYB').value), sm=parseInt(_('chMB').value), sd=parseInt(_('chDB').value);
+        let amt = parseInt(toEn(_('chAmtB').value)), cnt = parseInt(toEn(_('chCntB').value)), step = parseInt(_('chStepB').value), sy=parseInt(_('chYB').value), sm=parseInt(_('chMB').value), sd=parseInt(_('chDB').value);
+        if(!amt||!cnt) return;
         for(let i=0; i<cnt; i++) {
-            let addM = i * step; let tm = sm + addM;
-            let ny = sy + Math.floor((tm-1)/12); let nm = ((tm-1)%12) + 1;
-            let nd = sd; if(nm>6 && nd==31) nd=30; if(nm==12 && nd>29) nd=29;
+            let tm = sm + (i * step), ny = sy + Math.floor((tm-1)/12), nm = ((tm-1)%12) + 1, nd = sd; 
+            if(nm>6 && nd==31) nd=30; if(nm==12 && nd>29) nd=29;
             cheques.push({ y:ny, m:nm, d:nd, amt:amt });
-        }
-        recalcBalances(); renderCh();
+        } recalcBalances(); renderCh();
     }
-
     function calcSmartRas() {
-        let net = parseInt(toEn(_('chNetSmart').value));
-        let cnt = parseInt(toEn(_('chCntSmart').value));
+        let net = parseInt(toEn(_('chNetSmart').value)), cnt = parseInt(toEn(_('chCntSmart').value)), stepV = _('chStepSmart').value, rate = parseFloat(toEn(_('chRate').value)) || 0;
         if(!net || !cnt) return;
-        
-        let intervalVal = _('chStepSmart').value;
-        let loopInterval = (intervalVal === '45') ? 2 : parseInt(intervalVal);
-        let rate = parseFloat(toEn(_('chRate').value)) || 0;
-
-        let sY = parseInt(_('chYSmart').value), sM = parseInt(_('chMSmart').value), sD = parseInt(_('chDSmart').value);
-        let bY = parseInt(_('baseY').value), bM = parseInt(_('baseM').value), bD = parseInt(_('baseD').value);
-        
-        let baseG = jalaliToGregorian(bY, bM, bD);
-        let baseDateObj = new Date(baseG.y, baseG.m - 1, baseG.d);
-
-        let totalFactor = 0;
-        let tempCheques = [];
-        let curY = sY, curM = sM;
+        let baseDateObj = new Date(jalaliToGregorian(_('baseY').value, _('baseM').value, _('baseD').value).y, jalaliToGregorian(_('baseY').value, _('baseM').value, _('baseD').value).m - 1, jalaliToGregorian(_('baseY').value, _('baseM').value, _('baseD').value).d);
+        let totalFactor = 0, tempCheques = [], curY = parseInt(_('chYSmart').value), curM = parseInt(_('chMSmart').value), sD = parseInt(_('chDSmart').value);
 
         for(let i=0; i<cnt; i++) {
-            let day = sD;
-            if(sD > 30 && curM > 6) day = 30;
-            if(curM === 12 && day > 29) day = 29;
-
-            let checkG = jalaliToGregorian(curY, curM, day);
-            let checkDate = new Date(checkG.y, checkG.m - 1, checkG.d);
-            
-            let diff = Math.ceil((checkDate - baseDateObj) / (1000*60*60*24));
-            if(diff <= 0) diff = 0;
-
-            let interest = (rate/100) * (diff/30);
-            let factor = 1 - interest;
-            
+            let day = sD; if(sD > 30 && curM > 6) day = 30; if(curM === 12 && day > 29) day = 29;
+            let checkDate = new Date(jalaliToGregorian(curY, curM, day).y, jalaliToGregorian(curY, curM, day).m - 1, jalaliToGregorian(curY, curM, day).d);
+            let diff = Math.max(0, Math.ceil((checkDate - baseDateObj) / 86400000)), factor = 1 - ((rate/100) * (diff/30));
             if(factor <= 0) return alert("سود بیشتر از مبلغ چک شده است!");
-            
-            totalFactor += factor;
-            
-            tempCheques.push({ y:curY, m:curM, d:day });
-
-            if (intervalVal === '45') {
-               checkDate.setDate(checkDate.getDate() + 45);
-               let nextJ = gregorianToJalali(checkDate);
-               curY = nextJ[0]; curM = nextJ[1]; day = nextJ[2]; 
-               sD = day; 
-            } else {
-                curM += loopInterval;
-                while(curM > 12) { curM -= 12; curY++; }
-            }
+            totalFactor += factor; tempCheques.push({ y:curY, m:curM, d:day });
+            if (stepV === '45') { checkDate.setDate(checkDate.getDate() + 45); let nextJ = gregorianToJalali(checkDate); curY = nextJ[0]; curM = nextJ[1]; sD = nextJ[2]; } 
+            else { curM += parseInt(stepV); while(curM > 12) { curM -= 12; curY++; } }
         }
-
-        let checkVal = net / totalFactor;
-        checkVal = Math.ceil(checkVal / 5000) * 5000;
-
-        cheques = [];
-        tempCheques.forEach(c => {
-            cheques.push({ y:c.y, m:c.m, d:c.d, amt:checkVal });
-        });
+        let checkVal = Math.ceil((net / totalFactor) / 5000) * 5000;
+        cheques = []; tempCheques.forEach(c => { cheques.push({ y:c.y, m:c.m, d:c.d, amt:checkVal }); });
         recalcBalances(); renderCh();
     }
-
-    function recalcBalances() { let total = cheques.reduce((acc,c)=>acc+c.amt,0); let running=total; cheques.forEach(c=>{c.bal=running-c.amt; running-=c.amt;}); }
-    
+    function recalcBalances() { let running = cheques.reduce((acc,c)=>acc+c.amt,0); cheques.forEach(c=>{c.bal=running-c.amt; running-=c.amt;}); }
     function renderCh() {
-        const list = _('chList');
-        if(cheques.length === 0) {
-            list.innerHTML = '<div class="empty-list">هنوز چکی وارد نشده است</div>';
-            _('fCnt').innerText = "۰"; _('fDays').innerText = "۰"; _('fTot').innerText = "۰";
-            _('fInt').innerText = "۰"; _('fNet').innerText = "۰"; _('fDate').innerText = "---";
-            return;
-        }
-        
+        if(cheques.length === 0) { _('chList').innerHTML = '<div class="empty-list">هنوز چکی وارد نشده است</div>'; _('fCnt').innerText="۰"; _('fDays').innerText="۰"; _('fTot').innerText="۰"; _('fInt').innerText="۰"; _('fNet').innerText="۰"; _('fDate').innerText="---"; return; }
         let h='', tot=0, wSum=0;
-        cheques.forEach((c,i)=>{
-            let days = diffDays(baseDate, {y:c.y, m:c.m, d:c.d});
-            tot+=c.amt; wSum+=c.amt*days;
-            h+=`<div class="cheque-row"><div style="flex:1"><div class="c-date">${toFa(c.y)}/${toFa(c.m)}/${toFa(c.d)} <span style="font-weight:normal; font-size:11px; color:#666">(${toFa(days)} روز)</span></div><div class="c-sub">مانده: ${toFa(sep(c.bal))}</div></div><div style="text-align:left"><div class="c-amt">${toFa(sep(c.amt))}</div><span class="btn-del" onclick="delCh(${i})">×</span></div></div>`;
-        });
-        list.innerHTML=h;
-        
-        let ras = tot>0 ? wSum/tot : 0;
-        let r = parseFloat(toEn(_('chRate').value))||0;
-        let interest = tot * (r/100) * (ras/30);
-        let rdStr = "---";
-        
-        if(tot > 0){
-            let g = jalaliToGregorian(baseDate.y, baseDate.m, baseDate.d);
-            let t = new Date(g.y, g.m-1, g.d); t.setDate(t.getDate() + Math.round(ras));
-            let j = gregorianToJalali(t);
-            rdStr = `${toFa(j[0])}/${toFa(j[1])}/${toFa(j[2])}`;
-        }
-        
-        _('fCnt').innerText=toFa(cheques.length); 
-        _('fDays').innerText=toFa(Math.round(ras)); 
-        _('fTot').innerText=toFa(sep(tot));
-        _('fInt').innerText=toFa(sep(Math.round(interest))); 
-        _('fNet').innerText=toFa(sep(Math.round(tot-interest))); 
-        _('fDate').innerText=rdStr;
+        cheques.forEach((c,i)=>{ let days = diffDays(baseDate, c); tot+=c.amt; wSum+=c.amt*days; h+=`<div class="cheque-row"><div style="flex:1"><div class="c-date">${toFa(c.y)}/${toFa(c.m)}/${toFa(c.d)} <span style="font-size:11px; color:#666">(${toFa(days)} روز)</span></div><div style="font-size:12px">مانده: ${toFa(sep(c.bal))}</div></div><div style="text-align:left"><div class="c-amt">${toFa(sep(c.amt))}</div><span class="btn-del" onclick="delCh(${i})">×</span></div></div>`; });
+        _('chList').innerHTML=h;
+        let ras = tot>0 ? wSum/tot : 0, interest = tot * ((parseFloat(toEn(_('chRate').value))||0)/100) * (ras/30);
+        let t = new Date(jalaliToGregorian(baseDate.y, baseDate.m, baseDate.d).y, jalaliToGregorian(baseDate.y, baseDate.m, baseDate.d).m-1, jalaliToGregorian(baseDate.y, baseDate.m, baseDate.d).d); t.setDate(t.getDate() + Math.round(ras)); let j = gregorianToJalali(t);
+        _('fCnt').innerText=toFa(cheques.length); _('fDays').innerText=toFa(Math.round(ras)); _('fTot').innerText=toFa(sep(tot)); _('fInt').innerText=toFa(sep(Math.round(interest))); _('fNet').innerText=toFa(sep(Math.round(tot-interest))); _('fDate').innerText=`${toFa(j[0])}/${toFa(j[1])}/${toFa(j[2])}`;
     }
-
     function delCh(i) { cheques.splice(i,1); recalcBalances(); renderCh(); }
-    
-    function resetCh() { 
-        cheques=[]; 
-        _('chAmtB').value=''; _('chCntB').value=''; _('chAmtS').value=''; 
-        _('chNetSmart').value=''; _('chCntSmart').value='';
-        renderCh(); 
-    }
-    
+    function resetCh() { cheques=[]; _('chAmtB').value=''; _('chCntB').value=''; _('chAmtS').value=''; _('chNetSmart').value=''; _('chCntSmart').value=''; renderCh(); }
     function calcCh(){ renderCh(); } 
 
     function jalaliToGregorian(j_y, j_m, j_d) { j_y=parseInt(j_y); j_m=parseInt(j_m); j_d=parseInt(j_d); var jy=j_y-979; var jm=j_m-1; var jd=j_d-1; var j_day_no=365*jy+parseInt(jy/33)*8+parseInt((jy%33+3)/4); for(var i=0;i<jm;++i)j_day_no+=(i<6)?31:30; j_day_no+=jd; var g_day_no=j_day_no+79; var gy=1600+400*parseInt(g_day_no/146097); g_day_no=g_day_no%146097; var leap=true; if(g_day_no>=36525){g_day_no--; gy+=100*parseInt(g_day_no/36524); g_day_no=g_day_no%36524; if(g_day_no>=365)g_day_no++; else leap=false;} gy+=4*parseInt(g_day_no/1461); g_day_no%=1461; if(g_day_no>=366){leap=false; g_day_no--; gy+=parseInt(g_day_no/365); g_day_no=g_day_no%365;} for(var i=0;g_day_no>=365+(i==1&&leap);i++){g_day_no-=365+(i==1&&leap); gy++;} var gm=0; var gd=0; var gm_days=[31,(leap?29:28),31,30,31,30,31,31,30,31,30,31]; for(var i=0;i<12;i++){if(g_day_no<gm_days[i]){gm=i+1; gd=g_day_no+1; break;}g_day_no-=gm_days[i];} return {y:gy, m:gm, d:gd}; }
     function gregorianToJalali(d) { let g_y=d.getFullYear(), g_m=d.getMonth()+1, g_d=d.getDate(); var g_days_in_month=[31,28,31,30,31,30,31,31,30,31,30,31]; if((g_y%4==0&&g_y%100!=0)||(g_y%400==0))g_days_in_month[1]=29; var gy=g_y-1600; var gm=g_m-1; var gd=g_d-1; var g_day_no=365*gy+parseInt((gy+3)/4)-parseInt((gy+99)/100)+parseInt((gy+399)/400); for(var i=0;i<gm;++i)g_day_no+=g_days_in_month[i]; g_day_no+=gd; var j_day_no=g_day_no-79; var j_np=parseInt(j_day_no/12053); j_day_no=j_day_no%12053; var jy=979+33*j_np+4*parseInt(j_day_no/1461); j_day_no%=1461; if(j_day_no>=366){jy+=parseInt((j_day_no-1)/365); j_day_no=(j_day_no-1)%365;} var jm=0; var jd=0; for(var i=0;i<11&&j_day_no>=(i<6?31:30);++i){j_day_no-=(i<6?31:30); jm++;} jm++; jd=j_day_no+1; return [jy,jm,jd]; }
-    function diffDays(j1, j2) { let g1=jalaliToGregorian(j1.y,j1.m,j1.d); let g2=jalaliToGregorian(j2.y,j2.m,j2.d); let d1=new Date(g1.y,g1.m-1,g1.d); let d2=new Date(g2.y,g2.m-1,g2.d); return Math.ceil((d2-d1)/(1000*60*60*24)); }
+    function diffDays(j1, j2) { let d1=new Date(jalaliToGregorian(j1.y,j1.m,j1.d).y,jalaliToGregorian(j1.y,j1.m,j1.d).m-1,jalaliToGregorian(j1.y,j1.m,j1.d).d); let d2=new Date(jalaliToGregorian(j2.y,j2.m,j2.d).y,jalaliToGregorian(j2.y,j2.m,j2.d).m-1,jalaliToGregorian(j2.y,j2.m,j2.d).d); return Math.ceil((d2-d1)/(1000*60*60*24)); }
 </script>
 </body>
 </html>
